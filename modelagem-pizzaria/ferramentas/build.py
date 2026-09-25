@@ -340,7 +340,7 @@ def preparacao(d, split, join, salao):
 
 def atendimento_telefonico(d):
     s = '33242c3d'; at = '0dd8b74f'
-    d.set_task_type(at, 'Manual')          # a ligação já é recebida pelo evento de início de mensagem
+    d.set_task_type(at, 'None')            # a ligação já é recebida pelo evento de início de mensagem
     d.del_msgs(lambda m: True)
     x, y, w, h = d.geom(s)
     d.msg(pool_of(d, 'Cliente'), d.full(s), 'Ligação', [(x + w / 2, 120), (x + w / 2, y)])
@@ -448,7 +448,7 @@ def pagamento(d):
     pc, vc = 'e7cf5bb0', 'c0cf8df0'
     T(d, pc, 850, r2); T(d, vc, 1030, r2)
     rr = 'c81c8e84'; T(d, rr, 1460, r1)
-    nf = '892ff2a5'; d.rename(nf, 'Emitir a nota fiscal'); d.set_task_type(nf, 'User'); T(d, nf, 1630, r1)
+    nf = '892ff2a5'; d.rename(nf, 'Emitir a nota fiscal'); T(d, nf, 1630, r1)
     en = 'f8c6c1aa'; T(d, en, 1800, r1)
     fim = 'ebf919b6'; d.rename(fim, 'Serviço concluído'); E(d, fim, 1980, r1)
     mv(d, '57c8b374', 1505, 320)
@@ -672,12 +672,23 @@ BUILD = {
 }
 
 
+def tarefas_sem_tipo(d):
+    """Todas as tarefas como tarefa simples, sem o ícone de tipo (manual, usuário, envio, recebimento)."""
+    for a in d.root.iter(q('Activity')):
+        im = a.find(q('Implementation'))
+        tk = im.find(q('Task')) if im is not None else None
+        if tk is not None:
+            for c in list(tk):
+                tk.remove(c)
+
+
 def build_all():
     out = {}
     for did, fn in BUILD.items():
         d = Diagram(did)
         fn(d)
         normalize_names(d)
+        tarefas_sem_tipo(d)
         out[did] = d
     return out
 
