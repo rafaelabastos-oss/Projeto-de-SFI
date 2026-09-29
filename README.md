@@ -17,7 +17,7 @@ Abra `index.html` no navegador para acessar o portal do projeto.
 ### Novidades da v1.1
 
 - **Qualquer município**: o nome da cidade é escolhido na introdução (padrão: *Aquipólis*, cidade fictícia) e aparece
-  no jogo, nas notícias e no mural. Saíram as referências fixas a Quissamã, ao Norte Fluminense e a outros lugares.
+  no jogo, nas notícias e no mural. Saíram todas as referências fixas a uma cidade ou região específica.
 - **Aviso chamativo de despesca** (sugestão da turma): quando tanques ficam prontos, surge um alerta no centro da tela com som,
   uma faixa dourada fixa com a quantidade de tanques prontos e um contador no botão *Vender*, sem precisar clicar tanque por tanque.
 - **Modo decisões** (sugestão da turma, “um jogo em que só aparecem as decisões”): a equipe cuida da rotina (povoar, alimentar,
