@@ -6,11 +6,14 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="description" content="Aquipólis Tycoon — simulação educativa de gestão cooperativa da Rota da Tilápia (UPA · UBP · UPP), PEA Pescarte, Norte Fluminense." />
+<meta name="description" content="Aquipólis Tycoon — simulação educativa de gestão cooperativa da Rota da Tilápia (UPA · UBP · UPP) e da governança participativa do GAO — adaptável a qualquer município." />
 <meta name="theme-color" content="#07151a" />
 <title>Aquipólis Tycoon — A Rota da Tilápia</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307151a'/%3E%3Cpath d='M10 33c7-12 22-15 32-7l10-7v28l-10-7c-10 8-25 5-32-7z' fill='%2326e2cf'/%3E%3Ccircle cx='21' cy='31' r='2.6' fill='%2307151a'/%3E%3C/svg%3E" />
-<!-- Aquipólis Tycoon v1.0 — edição profissional (base Rev. 18.3).
+<!-- Aquipólis Tycoon v1.1 — município configurável (sem referências regionais fixas), aviso chamativo de despesca,
+     Modo decisões (demandas do dia que mudam o cenário) e governança do Estatuto do GAO (eleição, obra acompanhada,
+     reuniões, votação por maioria, atas, devolutivas, mural de transparência e conselhos CAE/CFE).
+     Aquipólis Tycoon v1.0 — edição profissional (base Rev. 18.3).
      Novidades: tela de carregamento, menu principal, salvar/continuar (localStorage), menu de pausa,
      configurações (gráficos, áudio, interface), ícones vetoriais, dicas ao passar o mouse,
      atalhos de teclado, balanço mensal com gráfico e relatório final com pontuação.
@@ -298,6 +301,52 @@
     #time{padding:4px 6px 5px;} .hbtn{width:36px;height:38px;font-size:17px;} .kpis{grid-template-columns:1fr 1fr;} .irow{grid-template-columns:118px 1fr 42px;} .setrow .seg{min-width:150px;} }
   @media (prefers-reduced-motion:reduce){ *{animation-duration:.01ms!important;transition-duration:.01ms!important;} }
   #modal{z-index:80;} .card:focus{outline:none;} #hint{display:none;}
+  /* v1.1 — aviso de despesca, votação, GAO */
+  #readyBanner{position:absolute;top:104px;left:50%;transform:translateX(-50%);z-index:19;display:none;align-items:center;gap:10px;
+    padding:8px 8px 8px 14px;border-radius:999px;cursor:pointer;background:linear-gradient(90deg,#f5b13d,#ffd23a);color:#231500;
+    font-size:14px;box-shadow:0 0 0 0 rgba(255,210,58,.6);animation:rbpulse 1.8s infinite;white-space:nowrap;zoom:var(--uiz);}
+  #readyBanner.show{display:flex;}
+  #readyBanner .rb-dot{width:10px;height:10px;border-radius:50%;background:#231500;animation:blink 1s infinite;}
+  #readyBanner .rb-go{background:#231500;color:#ffd23a;border-radius:999px;padding:4px 11px;font-weight:700;font-size:12.5px;}
+  @keyframes rbpulse{0%{box-shadow:0 0 0 0 rgba(255,210,58,.55);}70%{box-shadow:0 0 0 16px rgba(255,210,58,0);}100%{box-shadow:0 0 0 0 rgba(255,210,58,0);}}
+  @keyframes blink{50%{opacity:.25;}}
+  #callout{position:fixed;left:50%;top:26%;transform:translate(-50%,-10px) scale(.96);z-index:32;display:flex;gap:16px;align-items:center;
+    width:max-content;max-width:min(540px,calc(100vw - 32px));box-sizing:border-box;padding:18px 22px;border-radius:18px;background:rgba(12,38,46,.97);border:2px solid #ffd23a;
+    box-shadow:0 20px 60px -10px rgba(0,0,0,.7),0 0 40px -6px rgba(255,210,58,.45);cursor:pointer;opacity:0;visibility:hidden;
+    transition:opacity .35s ease,transform .35s cubic-bezier(.2,.8,.2,1),visibility .35s;}
+  #callout.show{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1);}
+  #callout .co-ico{font-size:46px;animation:bob 1.2s ease-in-out infinite;}
+  #callout .co-k{font:700 10.5px "JetBrains Mono",monospace;letter-spacing:2px;text-transform:uppercase;color:#ffd23a;margin-bottom:2px;}
+  #callout b{font-size:21px;line-height:1.15;display:block;} #callout p{font-size:13px;color:var(--txt-dim);margin-top:4px;}
+  .tool .badge{position:absolute;top:2px;left:5px;min-width:18px;height:18px;border-radius:9px;background:#ffd23a;color:#231500;
+    font:800 11px "JetBrains Mono",monospace;display:none;align-items:center;justify-content:center;padding:0 4px;animation:blink 1.4s infinite;}
+  body.in-menu #readyBanner, body.in-menu #callout{display:none!important;}
+  .votebox{background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:6px 10px 10px;}
+  .vrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid #103039;}
+  .vrow.win .vtxt b{color:var(--mint);} .vrow.win{background:rgba(125,240,166,.06);border-radius:8px;}
+  .vtxt{flex:1;} .vtxt b{font-size:13.5px;display:block;} .vtxt small{font-size:11px;color:var(--txt-mut);}
+  .vfoot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12.5px;color:var(--txt-dim);padding:9px 4px 2px;}
+  .vfoot .ok{color:var(--mint);font-weight:700;} .vfoot .no{color:var(--amber);font-weight:700;}
+  .vart{font-size:11px;color:var(--txt-mut);font-style:italic;padding:4px;}
+  .kick2{font:700 10.5px "JetBrains Mono",monospace;letter-spacing:2px;text-transform:uppercase;color:var(--aqua);margin-bottom:4px;}
+  .checks{display:flex;flex-direction:column;gap:5px;margin-top:10px;font-size:12.5px;}
+  .checks div{display:flex;gap:8px;align-items:baseline;} .checks span{font-weight:800;width:14px;}
+  .checks .ok span{color:var(--mint);} .checks .no span{color:var(--coral);} .checks .no{color:var(--txt);}
+  .checks em{font-style:normal;color:var(--txt-mut);font-size:11px;margin-left:auto;white-space:nowrap;}
+  .ata{border-left:3px solid var(--aqua);background:var(--ink2);border-radius:0 9px 9px 0;padding:8px 11px;margin-bottom:7px;}
+  .ata .ah{display:flex;justify-content:space-between;gap:8px;font:600 10.5px "JetBrains Mono",monospace;color:var(--txt-mut);margin-bottom:2px;}
+  .ata b{font-size:13px;} .ata p{font-size:12px;color:var(--txt-dim);margin-top:1px;}
+  .cityset{background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:12px;margin:4px 0 8px;}
+  .cityset label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;}
+  .cityset input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--txt);
+    font:600 15px inherit;font-family:inherit;-webkit-user-select:text;user-select:text;}
+  .cityset input:focus{outline:none;border-color:var(--aqua);}
+  .cityset small{display:block;font-size:11px;color:var(--txt-mut);margin-top:6px;}
+  .itog{display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--ink2);border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:8px;}
+  .itog.on{border-color:var(--aqua);} .itog .sw{pointer-events:none;}
+  @media (max-width:820px){ #readyBanner{top:148px;left:8px;right:8px;transform:none;justify-content:space-between;font-size:12.5px;padding:7px 7px 7px 12px;}
+    #readyBanner b{overflow:hidden;text-overflow:ellipsis;}
+    body.has-ready #teams, body.has-ready #inspect{top:192px!important;max-height:calc(100vh - 296px)!important;} #callout{width:calc(100vw - 32px);} #callout{top:30%;} #callout b{font-size:17px;} #callout .co-ico{font-size:36px;} }
   body.in-menu #hud, body.in-menu #tools, body.in-menu #zoomctl, body.in-menu #ticker,
   body.in-menu #teams, body.in-menu #log, body.in-menu #hint, body.in-menu #inspect{display:none!important;}
   .close-x{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;font-size:18px;}
@@ -320,7 +369,7 @@
 <div id="hud">
   <div class="brand" title="Aquipólis Tycoon — A Rota da Tilápia">
     <div class="logo" data-ic="fish"></div>
-    <div class="bt"><b>Aquipólis<em>Tycoon</em></b><small>UPA · Quissamã/RJ</small></div>
+    <div class="bt"><b>Aquipólis<em>Tycoon</em></b><small id="brandCity">UPA · Aquipólis</small></div>
   </div>
   <div class="stats" id="stats"></div>
   <div id="time">
@@ -344,6 +393,8 @@
 </div>
 <div id="menu" aria-label="Menu principal"></div>
 <div id="tip"></div>
+<div id="readyBanner" onclick="openBuyers()" role="status" aria-live="polite" title="Abrir compradores (6)"></div>
+<div id="callout" onclick="this.classList.remove('show');openBuyers()" role="alert"></div>
 <div id="ticker" onclick="openNews()" style="position:absolute;top:70px;left:0;right:0;z-index:15;display:none;cursor:pointer;
   background:linear-gradient(90deg,rgba(9,28,33,.96),rgba(9,28,33,.78));border-bottom:1px solid var(--line);
   padding:5px 14px;font-size:12px;color:var(--txt-dim);white-space:nowrap;overflow:hidden;">
@@ -373,9 +424,9 @@ window.addEventListener('error', function(ev){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* =====================================================================
-   UPA TYCOON v2 — Gestor da Unidade de Produção Aquícola de Quissamã/RJ
+   UPA TYCOON v2 — Gestor da Unidade de Produção Aquícola de um município (configurável)
    Layout fiel ao Projeto Básico de Arquitetura (TP7-190/191):
-   edifício com salas reais, estacionamento, Estrada do Matias (QSM-013),
+   edifício com salas reais, estacionamento, estrada de acesso,
    reservatórios de reúso · 132 tanques em 22 módulos com recirculação
    (RAS) integrada e filtros rizosféricos · 22 cooperados em equipes.
    ===================================================================== */
@@ -414,6 +465,7 @@ const ICONS={
   newg:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
   info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/>',
   flow:'<rect x="2.5" y="4" width="6" height="5" rx="1.2"/><rect x="15.5" y="4" width="6" height="5" rx="1.2"/><rect x="9" y="15" width="6" height="5" rx="1.2"/><path d="M8.5 6.5h7M18.5 9v3.5H12V15"/>',
+  vote:'<path d="M3.5 13h17v7.5h-17z"/><path d="M7.5 13V4.5h9V13"/><path d="M9.8 8.6l1.6 1.6 3-3"/>',
   exit:'<path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14"/><path d="M10 8l-4 4 4 4M6 12h10"/>',
 };
 function icon(n,extra){ return `<svg class="i" viewBox="0 0 24 24" aria-hidden="true"${extra?' '+extra:''}>${ICONS[n]||''}</svg>`; }
@@ -425,7 +477,7 @@ const SAVE_KEY='aquipolis-tycoon-save-v1', PREF_KEY='aquipolis-tycoon-prefs-v1';
 function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch(e){ return false; } }
 function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
-const PREFS=Object.assign({quality:null, volume:.7, sfx:true, ambient:true, labels:false, ui:1, routine:true}, lsGet(PREF_KEY)||{});
+const PREFS=Object.assign({quality:null, volume:.7, sfx:true, ambient:true, labels:false, ui:1, routine:true, cidade:''}, lsGet(PREF_KEY)||{});
 function savePrefs(){ lsSet(PREF_KEY,PREFS); }
 document.documentElement.style.setProperty('--uiz',PREFS.ui);
 function bootStatus(t){ const e=document.getElementById('bootSt'); if(e) e.textContent=t; }
@@ -437,6 +489,7 @@ const CFG={
   energyPerTank:.20, energyCap:30, energyTariff:.70,
   coopRetirada:1000,            // pró-labore mensal por cooperado
   startCash:400000, startFeed:25000, goalProfit:1500000, ruinCash:-160000,
+  obraDias:60,                  // duração-base das obras da UBP/UPP (acompanhadas pelo GAO)
   tanksPerFeeder:66, tanksPerWater:48, harvestPerCrew:4, // efeitos das equipes
 };
 const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
@@ -450,7 +503,7 @@ const FUNCS=[
 ];
 
 /* ----------------- ESTADO ----------------- */
-/* ===== CADEIA DA TILÁPIA (dados reais EVTEAS — UBP-M Macaé / UPP Rio das Ostras) =====
+/* ===== CADEIA DA TILÁPIA (dados de referência dos estudos EVTEAS — UBP-M / UPP) =====
    Investimento real via convênio PEA Pescarte; a cooperativa paga a CONTRAPARTIDA no jogo. */
 const CADEIA={
   rendFile:.32,  precoFile:28.00,   // 1 kg de tilápia -> 32% de filé (atacado resfriado)
@@ -475,6 +528,9 @@ const G={ day:0, speed:0, started:false, over:false,
   news:[], buyers:[], receivables:[], buyerSeq:0, hasPNAE:false, _moraleDays:0,
   sustentabilidade:70, confianca:70, producedKg:0, oficina:false, monthSnap:null,
   history:[], _tt:{}, _ubpAviso:false, _uppAviso:false,
+  cidade:(PREFS.cidade||''), modoDecisoes:false,
+  gao:null, obra:null, conselhos:{}, atas:[], _ataSeq:0, devolutivas:0, lastDevol:-99, _gaoInfra:0,
+  chuva:0, _arvores:0, _recentDec:[], _prontosPrev:0, _readyAnn:-99,
 };
 for(let m=0;m<CFG.modules;m++)for(let t=0;t<CFG.tanksPerModule;t++)
   G.tanks.push({id:G.tanks.length, mod:m, idx:t, state:'vazio',
@@ -667,11 +723,11 @@ function initThree(){
   applyCam(); animate();
 }
 
-/* ----------------- TERRENO DE QUISSAMÃ ----------------- */
+/* ----------------- TERRENO DA UNIDADE ----------------- */
 function buildTerrain(){
-  // polígono irregular do lote (Estrada do Matias corta o canto noroeste)
+  // polígono irregular do lote (a estrada de acesso corta o canto noroeste)
   const sh=new THREE.Shape();
-  const P=[[-122,-115],[128,-115],[128,158],[-40,158],[-122,60]]; // lote irregular de Quissamã
+  const P=[[-122,-115],[128,-115],[128,158],[-40,158],[-122,60]]; // lote irregular
   sh.moveTo(P[0][0],P[0][1]); for(let i=1;i<P.length;i++) sh.lineTo(P[i][0],P[i][1]); sh.closePath();
   const lote=new THREE.Mesh(new THREE.ShapeGeometry(sh), mat('#c2ad82',{roughness:1, map:(GFX.procTex?texDirt():null)}));
   lote.rotation.x=-Math.PI/2; lote.position.y=0; lote.receiveShadow=true; scene.add(lote);
@@ -680,12 +736,12 @@ function buildTerrain(){
   const plat=new THREE.Mesh(new THREE.PlaneGeometry(220,160), mat('#cdb896',{roughness:.95, map:(GFX.procTex?texConcrete():null)}));
   plat.rotation.x=-Math.PI/2; plat.position.set(0,0.02,40); plat.receiveShadow=true; scene.add(plat);
 
-  // ESTRADA DO MATIAS (QSM-013) — via de acesso ao norte do lote
+  // ESTRADA DE ACESSO — via municipal ao norte do lote
   const road=new THREE.Mesh(new THREE.PlaneGeometry(250,13), mat('#3c3f44',{roughness:1}));
   road.rotation.x=-Math.PI/2; road.position.set(0,0.04,-110); scene.add(road);
   for(let i=0;i<14;i++){ const l=new THREE.Mesh(new THREE.PlaneGeometry(5,.4),mat('#d9c66a'));
     l.rotation.x=-Math.PI/2; l.position.set(-110+i*16,0.06,-110); scene.add(l); }
-  const rlab=makeLabel('🛣️ Estrada do Matias (QSM-013)',6.5,'#d9e6e6'); rlab.position.set(-40,9,-110); scene.add(rlab);
+  const rlab=makeLabel('🛣️ Estrada de acesso',6.5,'#d9e6e6'); rlab.position.set(-40,9,-110); scene.add(rlab);
 
   // estacionamento (entre estrada e prédio)
   const park=new THREE.Mesh(new THREE.PlaneGeometry(64,20), mat('#55585a',{roughness:1}));
@@ -1359,7 +1415,7 @@ function setupControls(){
     if(k==='+'||k==='=')zoomBy(0.85); if(k==='-'||k==='_')zoomBy(1.18);
     if(k==='f')fitView(); if(k==='l')toggleLabels(); if(k==='m')toggleMute();
     if(k==='h'||k==='?')openShortcuts();
-    if(k>='1'&&k<='8'){ const t=TOOLS[+k-1]; if(t&&t.act){ t.act(); sfx('click'); } }
+    if(k>='1'&&k<='9'){ const t=TOOLS[+k-1]; if(t&&t.act){ t.act(); sfx('click'); } }
     if(k===' '||k==='p'){togSpeed();e.preventDefault();} applyCam();});
 }
 function hideTip(){ const t=document.getElementById('tip'); if(t) t.style.display='none'; if(hoverRing) hoverRing.visible=false;
@@ -1378,6 +1434,9 @@ function hoverAt(cx,cy){
     html=`<b>Tanque ${tk.id+1}</b> <span class="m">· Módulo ${tk.mod+1}</span><div style="color:${col}">${st}</div>`+
       (tk.state==='vazio'?'':`<div class="m">Ciclo ${prog}% · ${fmtKg(tk.biomass)} · água ${Math.round(tk.wq)}%</div>
        <div class="mini"><i style="width:${prog}%;background:var(--aqua)"></i></div>`);
+  } else if(_obraGrp && G.obra && raycaster.intersectObject(_obraGrp,true).some(h=>!h.object.isSprite)){ hoverRing.visible=false;
+    html=`<b>Obra da ${OBRA_NOME[G.obra.id]}</b><div class="m">${Math.round(G.obra.prog)}% concluída · ritmo ${ritmoTxt()}</div>
+      <div class="mini"><i style="width:${G.obra.prog}%;background:var(--amber)"></i></div><div class="m">Acompanhada pelo GAO — veja o Mural (9)</div>`;
   } else { hoverRing.visible=false;
     const hits=raycaster.intersectObjects(Object.values(buildings).map(b=>b.group).filter(Boolean),true);
     for(const h of hits){ if(h.object.isSprite) continue; let o=h.object, found=null; while(o){ if(o.userData&&o.userData.enter){found=o.userData.enter;break;} o=o.parent; }
@@ -1450,7 +1509,7 @@ function teamEff(){
     sellMul: 1 + Math.min(.06, T.desp*0.012),       // menos perdas/expedição melhor
     resil: Math.min(.85, T.manut*0.16),             // reduz mortalidade de eventos
     compIncome: T.comp*450,                          // R$/dia de adubo
-    priceMul: 1 + Math.min(.15, T.admin*0.05),       // comercialização
+    priceMul: 1 + Math.min(.15, T.admin*0.05) + consBonus(),   // comercialização + gestão do CAE
     overheadMul: Math.max(.7, 1 - T.admin*0.06),     // admin enxuga overhead
   };
 }
@@ -1474,11 +1533,11 @@ function colher(tk){ if(tk.state==='vazio'){toast('warn','Vazio','Nada para colh
   splash(tankWorld[tk.id].x,tankWorld[tk.id].z);
   toast('good','Despesca realizada',`T${tk.id+1}: ${fmtKg(tk.biomass)} → ${money(liq)}${pre?' (precoce)':''}.`);
   tk.state='vazio'; tk.fish=0; tk.biomass=0; tk.day=0; tk.wq=100; refreshTanks(); updateHUD(); if(G.selected)renderInspect(); checkWin(); }
-function colherProntos(){ const E=teamEff(); const pr=G.tanks.filter(t=>t.state==='pronto').slice(0,E.harvestPerDay*30);
+function colherProntos(quiet){ const E=teamEff(); const pr=G.tanks.filter(t=>t.state==='pronto').slice(0,E.harvestPerDay*30);
   let tot=0,n=0; pr.forEach(t=>{ const liq=t.biomass*CFG.pricePerKg*G.priceMul*E.priceMul*E.sellMul*chainMul()*(1-CFG.taxRate);
     G.cash+=liq;G.profitAcc+=liq;G.producedKg+=t.biomass;tot+=liq;n++; if(n<=6&&tankWorld[t.id])splash(tankWorld[t.id].x,tankWorld[t.id].z); t.state='vazio';t.fish=0;t.biomass=0;t.day=0;t.wq=100;});
-  if(n)sfx('coin');
-  toast(n?'good':'warn','Despesca em lote',n?`${n} tanque(s) · ${money(tot)}.`:'Nenhum tanque pronto.');
+  if(n&&!quiet)sfx('coin');
+  toast(n?'good':'warn',quiet?'Despesca automática':'Despesca em lote',n?`${n} tanque(s) · ${money(tot)}.`:'Nenhum tanque pronto.',quiet);
   refreshTanks(); updateHUD(); if(G.selected)renderInspect(); checkWin(); }
 function manutencao(tk){ if(tk.state==='vazio')return; const c=600; if(G.cash<c){toast('bad','Sem caixa','');return;}
   G.cash-=c; tk.wq=Math.min(100,tk.wq+45); tk.disease=Math.max(0,tk.disease-50);
@@ -1501,18 +1560,18 @@ const BUILDS=[
    desc:'Frota própria (5,5 t). +5% no preço de venda.',apply:()=>{G.hasTruck=true;buildTruck();}},
   {id:'ubp',emoji:'🏭',name:'UBP — Beneficiamento de Pescado',cost:CADEIA.contraUBP,has:()=>G.hasUBP,
    req:()=>G.producedKg>=30000&&G.confianca>=55, reqTxt:'Convênio exige: 30 t já vendidas e confiança ≥ 55%',
-   desc:'Convênio de R$ 26,58 mi (PEA Pescarte). A cooperativa entra com a contrapartida. Fileta a tilápia: 32% vira filé a R$ 28/kg + 20% postas — cada kg despescado passa a valer mais.',
+   desc:'Convênio de R$ 26,58 mi (PEA Pescarte). A comunidade elege o GAO e a obra (~2 meses) é acompanhada por ele. A cooperativa entra com a contrapartida. Fileta a tilápia: 32% vira filé a R$ 28/kg + 20% postas — cada kg despescado passa a valer mais.',
    apply:()=>{G.hasUBP=true;buildUBP();sfx('good');
      pushNews('🏭 UBP inaugurada! A Rota da Tilápia ganha seu segundo elo: beneficiamento (filé + postas).','good');
      openAtoModal(2);}},
   {id:'upp',emoji:'🍢',name:'UPP — Processamento (CMS)',cost:CADEIA.contraUPP,has:()=>G.hasUPP,
-   req:()=>G.hasUBP&&G.producedKg>=70000, reqTxt:'Requer a UBP em operação e 70 t já vendidas',
-   desc:'Convênio de R$ 15,25 mi. Transforma o resíduo da filetagem (CMS) em almôndega (R$14,48), quibe (R$13,91), linguiça (R$14,03) e nuggets (R$18,70) — dinheiro que ia para o lixo.',
+   req:()=>G.hasUBP&&!G.obra&&G.producedKg>=70000, reqTxt:'Requer a UBP em operação e 70 t já vendidas',
+   desc:'Convênio de R$ 15,25 mi. Obra de ~2 meses acompanhada pelo GAO. Transforma o resíduo da filetagem (CMS) em almôndega (R$14,48), quibe (R$13,91), linguiça (R$14,03) e nuggets (R$18,70) — dinheiro que ia para o lixo.',
    apply:()=>{G.hasUPP=true;buildUPP();sfx('good');
      pushNews('🍢 UPP inaugurada! Resíduo agora vira nuggets, linguiça, quibe e almôndega de CMS.','good');
      openAtoModal(3);}},
   {id:'pnae',emoji:'🏫',name:'Acesso ao PNAE/PAA',cost:60000,has:()=>G.hasPNAE,
-   desc:'Adequação documental/sanitária p/ vender à merenda escolar (preço institucional, melhor e estável).',apply:()=>{G.hasPNAE=true;pushNews('🏫 UPA de Quissamã habilitada a fornecer à merenda escolar (PNAE/PAA).','good');}},
+   desc:'Adequação documental/sanitária p/ vender à merenda escolar (preço institucional, melhor e estável).',apply:()=>{G.hasPNAE=true;pushNews(`🏫 UPA de ${cid()} habilitada a fornecer à merenda escolar (PNAE/PAA).`,'good');}},
 ];
 function buildSolar(){ const g=new THREE.Group();
   for(let i=0;i<12;i++){ const p=new THREE.Mesh(new THREE.BoxGeometry(7,.3,4),
@@ -1524,6 +1583,11 @@ function buildTruck(){ const g=new THREE.Group();
   const box=new THREE.Mesh(new THREE.BoxGeometry(9,4,4.2),mat('#e8eef0')); box.position.set(2.5,2.4,0); g.add(box);
   g.position.set(58,.2,-34); g.traverse(o=>{if(o.isMesh)o.castShadow=true;}); scene.add(g); }
 function doBuild(id){ const b=BUILDS.find(x=>x.id===id); if(!b)return;
+  if(id==='ubp'||id==='upp'){                     // empreendimentos: eleição do GAO + obra acompanhada
+    if(G.obra){ toast('warn','Obra em andamento','Conclua a obra atual antes de iniciar outra.'); return; }
+    if(G.cash<b.cost){toast('bad','Sem caixa','Falta dinheiro para a contrapartida.');return;}
+    if(!G.gao){ openGaoElection(id); return; }
+    startObra(id); return; }
   if(G.cash<b.cost){toast('bad','Sem caixa','');return;} G.cash-=b.cost; b.apply();
   toast('good','Investimento concluído',`${b.emoji} ${b.name}.`); updateHUD(); openBuild(); }
 
@@ -1533,6 +1597,7 @@ function doBuild(id){ const b=BUILDS.find(x=>x.id===id); if(!b)return;
 let acc=0; let _lblNear=true;
 function tickDay(){
   G.day++;
+  autoRotina();                                   // Modo decisões: a equipe cuida da rotina
   const E=teamEff();
   const active=G.tanks.filter(t=>t.state!=='vazio');
   let feedNeed=0; active.forEach(t=>feedNeed+=feedFor(t));
@@ -1566,8 +1631,8 @@ function tickDay(){
 
   if(active.length&&G.feed<feedNeed*3) toastEvery('racao',8,'warn','Ração baixa','Estoque para menos de 3 dias — compre em Alimentar (tecla 2).');
   if(active.length&&E.feedEff<0.85) toastEvery('fome',10,'warn','Peixes com fome','Faltam tratadores — reforce a equipe de Alimentação (tecla 4).');
-  const nProntos=G.tanks.filter(t=>t.state==='pronto').length;
-  if(nProntos) toastEvery('despesca',10,'good','Hora da despesca',`${nProntos} tanque(s) prontos — negocie em Vender produção (tecla 6).`);
+  const nProntos=readyCount();                    // aviso chamativo de despesca (faixa + alerta central)
+  if(nProntos>(G._prontosPrev||0) && !G.modoDecisoes) announceReady(nProntos,nProntos-(G._prontosPrev||0));
 
   // ECONOMIA
   const kwh=(G.outage>0&&!G.hasGen?0:load)*24;
@@ -1575,7 +1640,8 @@ function tickDay(){
   const retiradas=(coopTotal()*CFG.coopRetirada/30)*E.overheadMul;
   const upkeep=active.length*6;
   const compRev=E.compIncome*(active.length>0?1:0);
-  const daily=energy+retiradas+upkeep-compRev;
+  const conselhos=Object.values(G.conselhos||{}).reduce((s,c)=>s+c.cae*c.pro,0)/30;   // pró-labore do CAE (Art. 24, IV)
+  const daily=energy+retiradas+upkeep+conselhos-compRev;
   G.cash-=daily; G.profitAcc-=daily;
 
   if(G.priceTimer>0){G.priceTimer--; if(!G.priceTimer)G.priceMul=1;}
@@ -1584,6 +1650,7 @@ function tickDay(){
   tickCommerce(); updateIndicators();
   if(G.day%15===0) maybeEvent(E);
   if(G.day>0 && G.day%30===0) doMonthEnd();
+  tickGovernanca();                               // obra + reuniões do GAO + demandas do dia + chuva
 
   refreshTanks(); updateHUD(); updateAlerts(); if(G.selected)renderInspect();
   if(G.cash<CFG.ruinCash&&!G.over) endGame(false);
@@ -1594,15 +1661,15 @@ function maybeEvent(E){ const active=G.tanks.filter(t=>t.state!=='vazio').length
   if(r<.22){ G.outage=2+(Math.random()*3|0);
     toast(G.hasGen?'warn':'bad',G.hasGen?'Queda de energia':'⚠ Queda de energia!',
       G.hasGen?'Gerador acionado (diesel caro).':'Sem gerador — bombas do RAS pararam, oxigênio caindo!');
-    pushNews('⚡ Falha no fornecimento de energia atinge a zona rural de Quissamã.','bad'); }
+    pushNews(`⚡ Falha no fornecimento de energia atinge a zona rural de ${cid()}.`,'bad'); }
   else if(r<.42){ G.priceMul=1.18+Math.random()*.22; G.priceTimer=12;
-    toast('good','Alta no preço',`Atacado CEASA/RJ +${Math.round((G.priceMul-1)*100)}%.`);
-    pushNews(`📈 Tilápia dispara +${Math.round((G.priceMul-1)*100)}% no atacado da CEASA/RJ.`,'good'); }
+    toast('good','Alta no preço',`Atacado regional (CEASA) +${Math.round((G.priceMul-1)*100)}%.`);
+    pushNews(`📈 Tilápia dispara +${Math.round((G.priceMul-1)*100)}% no atacado regional (CEASA).`,'good'); }
   else if(r<.55){ G.priceMul=0.78+Math.random()*.12; G.priceTimer=10;
     toast('warn','Preço em baixa',`Excesso de oferta derruba o preço.`);
     pushNews('📉 Safra cheia derruba o preço da tilápia na região.','warn'); }
   else if(r<.66){ if(G.wells<3){ toast('warn','Restrição hídrica','Estiagem. Considere outro poço artesiano.');
-    pushNews('🌵 Estiagem no Norte Fluminense pressiona o uso da água.','warn'); } }
+    pushNews('🌵 Estiagem na região pressiona o uso da água.','warn'); } }
   else if(r<.8){ const m=Math.random()*22|0; G.tanks.filter(t=>t.mod===m&&t.state==='engorda').forEach(t=>t.disease=Math.min(100,t.disease+40*(1-E.resil)));
     toast('bad','Surto sanitário',`Doença no Módulo ${m+1}. ${G.teams.manut?'Manutenção contém parte do dano.':'Sem manutenção — risco alto.'}`);
     pushNews(`🦠 Alerta sanitário: surto afeta o Módulo ${m+1} da UPA.`,'bad'); }
@@ -1644,6 +1711,7 @@ function showBalance(){
    ${ir('leaf','Sustentabilidade',Math.round(G.sustentabilidade)+'%',G.sustentabilidade)}
    ${ir('star','Confiança',Math.round(G.confianca)+'%',G.confianca)}
    <div class="row"><span>${icon('link')} Cadeia de valor</span><b>×${chainMul().toFixed(2)} · ${chainLabel()}</b></div>
+   <div class="row"><span>${icon('vote')} Governança</span><b>${G._ataSeq||0} atas · ${G.devolutivas} devolutiva${G.devolutivas===1?'':'s'}${G.obra?' · obra '+Math.round(G.obra.prog)+'%':''}</b></div>
    <button class="btn primary" style="justify-content:center;margin-top:12px" onclick="closeBalance()">Continuar ›</button>`);
 }
 window.closeBalance=()=>{ _decisionOpen=false; _monthlyPending=false;
@@ -1684,7 +1752,8 @@ function finalReport(){ if(G.over)return; G.over=true; setSpeed(0);
   const sustStar = Math.round(G.sustentabilidade/20);
   const confStar = Math.round(G.confianca/20);
   const chainStar= G.hasUPP?5:(G.hasUBP?3:1);
-  const media=(prodStar+finStar+orgStar+sustStar+confStar+chainStar)/6, pct=media*20;
+  const gaoStar = Math.max(1,Math.min(5, 1 + (G.gao?1:0) + Math.min(2,Math.floor(G.devolutivas/2)) + ((G._ataSeq||0)>=10?1:0) - Math.min(2,G._gaoInfra)));
+  const media=(prodStar+finStar+orgStar+sustStar+confStar+chainStar+gaoStar)/7, pct=media*20;
   const grade = media>=4.5?'Gestão exemplar':media>=3.5?'Boa gestão':media>=2.5?'Gestão em construção':'Gestão com dificuldades';
   const linha=(ic,k,n)=>`<div class="row"><span>${icon(ic)} ${k}</span><b style="color:var(--amber);letter-spacing:2px">${stars(n)}</b></div>`;
   const H=G.history||[];
@@ -1705,6 +1774,7 @@ function finalReport(){ if(G.over)return; G.over=true; setSpeed(0);
    ${linha('leaf','Sustentabilidade', sustStar)}
    ${linha('star','Confiança da comunidade', confStar)}
    ${linha('link','Cadeia de valor (UPA→UBP→UPP)', chainStar)}
+   ${linha('vote','Gestão democrática e transparência (GAO)', gaoStar)}
    <p class="lead" style="text-align:center;margin-top:14px;font-style:italic">"Uma boa gestão depende das decisões tomadas, da prevenção dos riscos e da participação coletiva."</p>
    <div style="display:flex;gap:8px"><button class="btn" style="flex:1;justify-content:center" onclick="backToMenu()">Menu principal</button>
    <button class="btn primary" style="flex:2;justify-content:center" onclick="playAgain()">Jogar de novo</button></div>`);
@@ -1811,7 +1881,7 @@ const DECISIONS=[
     fn:()=>{ eachActive(t=>{t.biomass*=0.98;}); adjConf(-8);
       return 'O conflito seguiu. A eficiência do trabalho caiu e a confiança diminuiu.'; }},
   ]},
- {emoji:'🌧️', cond:()=>true, titulo:'Chuvas fortes',
+ {emoji:'🌧️', cond:()=>true, titulo:'Chuvas fortes', onShow:()=>startRain(4),
   texto:'Uma forte chuva afetou a região, com risco para a água dos tanques e os equipamentos.',
   ops:[
    {lb:'Reforçar manutenção e drenagem', tag:'💸 custo · ✅ evita perdas',
@@ -1840,43 +1910,300 @@ const DECISIONS=[
       return 'Investiu no beneficiamento: o produto vale mais (+valor agregado) nas próximas vendas.'; }},
   ]},
 ];
-let _decisionOpen=false, _prevSpeed=1, _curD=-1;
-function triggerDecision(){ if(_decisionOpen||G.over)return false;
-  const pool=DECISIONS.map((d,i)=>({d,i})).filter(x=>{try{return x.d.cond();}catch(e){return false;}}); if(!pool.length)return false;
-  const pick=pool[Math.random()*pool.length|0]; _curD=pick.i;
+/* =====================================================================
+   DEMANDAS DO DIA (Modo decisões) — a rotina vira escolhas que mudam o cenário
+   ===================================================================== */
+const DEMANDAS=[
+ {emoji:'🔧', cond:()=>actives().length>0, titulo:'Bomba com ruído estranho',
+  texto:'Na ronda da manhã, a equipe percebeu que uma bomba do RAS está fazendo um barulho diferente.',
+  ops:[
+   {lb:'Parar e revisar agora', tag:'💸 R$ 1.500 · ✅ evita pane',
+    fn:()=>{ G.cash-=1500; adjSust(2); return 'A equipe de manutenção trocou o rolamento a tempo. A água seguiu circulando sem sustos.'; }},
+   {lb:'Esperar a manutenção programada', tag:'💰 economiza · ⚠️ risco de pane',
+    fn:()=>{ if(Math.random()<0.55) return 'A bomba aguentou até a manutenção programada. Desta vez deu certo.';
+      const m=Math.random()*22|0; G.tanks.filter(t=>t.mod===m&&t.state!=='vazio').forEach(t=>{t.wq=Math.max(0,t.wq-40);t.fish*=0.95;});
+      return `A bomba parou de madrugada e o Módulo ${m+1} ficou sem circulação. A água caiu e houve perdas (veja os tanques em vermelho).`; }},
+   {lb:'Improvisar com uma peça usada', tag:'💸 R$ 300 · ⚠️ pode não durar',
+    fn:()=>{ G.cash-=300; if(Math.random()<0.5) return 'O improviso funcionou por enquanto, mas vai precisar de revisão.';
+      G.outage=Math.max(G.outage,1); return 'A peça usada não aguentou e o módulo parou por um dia.'; }},
+  ]},
+ {emoji:'🙋', cond:()=>coopTotal()>0, titulo:'Cooperados faltaram ao turno',
+  texto:'Dois cooperados avisaram que não vêm hoje: um filho doente e um problema com o barco.',
+  ops:[
+   {lb:'Remanejar a equipe do dia', tag:'✅ sem custo · 👥 exige organização',
+    fn:()=>{ adjConf(2); return 'A equipe se reorganizou e cobriu as tarefas. Cooperativa é isso: um cobre o outro.'; }},
+   {lb:'Chamar diaristas', tag:'💸 R$ 600',
+    fn:()=>{ G.cash-=600; return 'Os diaristas cobriram o turno, mas precisaram de orientação o dia todo.'; }},
+   {lb:'Deixar alguns tanques sem trato hoje', tag:'❌ peixes com fome',
+    fn:()=>{ eachActive(t=>{t.biomass*=0.985;}); adjConf(-3); return 'Parte dos peixes ficou sem ração e o crescimento atrasou um pouco.'; }},
+  ]},
+ {emoji:'🐦', cond:()=>actives().length>0 && !G.hasNet, titulo:'Garças rondando os tanques',
+  texto:'Um bando de garças descobriu os tanques e está pescando os peixes menores.',
+  ops:[
+   {lb:'Instalar telas nos módulos atacados', tag:'💸 R$ 5.000 · ✅ protege',
+    fn:()=>{ G.cash-=5000; adjSust(3); return 'As telas resolveram sem machucar as aves. Pescado protegido e bicho respeitado.'; }},
+   {lb:'Espantar com fogos', tag:'💸 R$ 400 · ⚠️ incomoda a vizinhança',
+    fn:()=>{ G.cash-=400; adjConf(-4); adjSust(-4); return 'As garças foram embora por uns dias, mas os vizinhos reclamaram do barulho.'; }},
+   {lb:'Deixar como está', tag:'❌ perdas contínuas',
+    fn:()=>{ eachActive(t=>{t.fish*=0.97;}); return 'As garças voltaram todos os dias e levaram parte dos alevinos.'; }},
+  ]},
+ {emoji:'🌳', cond:()=>!G._arvores || G._arvores<3, titulo:'Proposta de cinturão verde',
+  texto:'Um grupo de cooperados propõe plantar árvores nativas em volta da unidade, para sombra, quebra-vento e menos poeira nos tanques.',
+  ops:[
+   {lb:'Fazer um mutirão de plantio', tag:'💸 R$ 2.000 · 🌱 muda o cenário',
+    fn:()=>{ G.cash-=2000; adjSust(8); adjConf(4); G._arvores=(G._arvores||0)+1; plantTrees(14);
+      pushNews(`🌳 Mutirão planta árvores nativas no entorno da UPA de ${cid()}.`,'good');
+      return 'Mutirão feito! As mudas já aparecem no entorno da unidade. Sustentabilidade e confiança sobem.'; }},
+   {lb:'Deixar para o ano que vem', tag:'💰 sem custo agora',
+    fn:()=>{ return 'A proposta ficou para depois. O grupo espera que ela volte à pauta.'; }},
+  ]},
+ {emoji:'🧪', cond:()=>actives().length>0, titulo:'Amônia alta em alguns tanques',
+  texto:'O teste de água da tarde mostrou amônia acima do ideal em alguns tanques mais adensados.',
+  ops:[
+   {lb:'Troca parcial de água', tag:'💸 R$ 1.200 · ✅ corrige rápido',
+    fn:()=>{ G.cash-=1200; eachActive(t=>{ if(t.wq<85) t.wq=Math.min(100,t.wq+20); }); return 'A troca parcial baixou a amônia. Os tanques voltaram à cor saudável.'; }},
+   {lb:'Reduzir a ração por dois dias', tag:'💰 economiza · 📉 cresce menos',
+    fn:()=>{ eachActive(t=>{ t.wq=Math.min(100,t.wq+8); t.biomass*=0.99; }); return 'Menos ração, menos resíduo: a água melhorou, mas o crescimento desacelerou um pouco.'; }},
+   {lb:'Aguardar', tag:'⚠️ pode piorar',
+    fn:()=>{ eachActive(t=>{ t.wq=Math.max(0,t.wq-12); }); return 'A amônia subiu mais e os tanques ficaram âmbar. Monitorem de perto.'; }},
+  ]},
+ {emoji:'🍽️', cond:()=>G.producedKg>0, titulo:'Restaurante pede amostra',
+  texto:'Um restaurante da cidade quer provar a tilápia da cooperativa antes de fechar um fornecimento.',
+  ops:[
+   {lb:'Enviar amostra caprichada', tag:'💸 R$ 800 · 📈 abre mercado',
+    fn:()=>{ G.cash-=800; adjConf(3); G.priceMul=Math.max(G.priceMul,1.08); G.priceTimer=Math.max(G.priceTimer,15);
+      return 'O restaurante aprovou e divulgou. O preço da cooperativa melhorou nas próximas semanas.'; }},
+   {lb:'Recusar — sem tempo agora', tag:'💰 sem custo',
+    fn:()=>{ return 'O restaurante procurou outro fornecedor.'; }},
+  ]},
+ {emoji:'🎓', cond:()=>coopTotal()>=10, titulo:'Curso de boas práticas',
+  texto:'A extensão rural oferece um curso de boas práticas de manejo e sanidade para quatro cooperados.',
+  ops:[
+   {lb:'Enviar quatro cooperados', tag:'📚 investe no grupo · ⏳ desfalca a equipe por uns dias',
+    fn:()=>{ G._moraleDays=Math.max(G._moraleDays,25); eachActive(t=>{t.disease=Math.max(0,t.disease-10);}); adjSust(4);
+      return 'Os cooperados voltaram multiplicando o que aprenderam. Sanidade e ânimo da equipe melhoraram.'; }},
+   {lb:'Não enviar agora', tag:'💰 mantém a equipe completa',
+    fn:()=>{ return 'A equipe seguiu completa, mas a oportunidade de formação passou.'; }},
+  ]},
+ {emoji:'♻️', cond:()=>G.producedKg>0, titulo:'Resíduos da despesca acumulando',
+  texto:'Vísceras e peixes descartados estão se acumulando atrás do galpão.',
+  ops:[
+   {lb:'Levar para a compostagem', tag:'✅ vira adubo', cond:()=>G.teams.comp>0,
+    fn:()=>{ adjSust(5); G.cash+=600; return 'A equipe de compostagem transformou o resíduo em adubo, que ainda foi vendido.'; }},
+   {lb:'Contratar coleta', tag:'💸 R$ 900',
+    fn:()=>{ G.cash-=900; adjSust(1); return 'A coleta levou o resíduo. Problema resolvido, mas custou.'; }},
+   {lb:'Enterrar em uma vala', tag:'❌ risco ambiental e de multa',
+    fn:()=>{ adjSust(-8); if(Math.random()<.4){ G.cash-=6000; adjConf(-6); return 'A fiscalização ambiental autuou a cooperativa (−R$ 6.000).'; } adjConf(-2); return 'Ninguém fiscalizou, mas o cheiro e o risco de contaminação ficaram.'; }},
+  ]},
+ {emoji:'⛈️', cond:()=>G.chuva<=0, titulo:'Previsão de temporal', onShow:()=>startRain(3),
+  texto:'A Defesa Civil avisou: temporal forte nas próximas horas. O céu já está fechando.',
+  ops:[
+   {lb:'Reforçar drenagem e proteger o quadro elétrico', tag:'💸 R$ 1.500 · ✅ sem perdas',
+    fn:()=>{ G.cash-=1500; return 'A chuva veio forte, mas a unidade estava preparada. Nada foi perdido.'; }},
+   {lb:'Arriscar e seguir a rotina', tag:'⚠️ pode dar queda de energia',
+    fn:()=>{ if(Math.random()<.5) return 'O temporal passou sem estragos. Sorte.';
+      G.outage=Math.max(G.outage,2); eachActive(t=>{t.wq=Math.max(0,t.wq-10);}); return 'Um raio derrubou a energia por dois dias e a água piorou.'; }},
+  ]},
+ {emoji:'👧', cond:()=>true, titulo:'Escola quer visitar a UPA',
+  texto:'Uma escola municipal pediu para trazer uma turma para conhecer a criação de peixes.',
+  ops:[
+   {lb:'Receber com visita guiada', tag:'⭐ confiança · ⏳ meio dia de trabalho',
+    fn:()=>{ adjConf(6); pushNews(`👧 Estudantes de ${cid()} visitam a UPA e aprendem sobre aquicultura.`,'good'); return 'As crianças adoraram e a comunidade comentou a visita a semana toda.'; }},
+   {lb:'Agora não dá', tag:'💰 mantém a rotina',
+    fn:()=>{ adjConf(-1); return 'A visita ficou para outra ocasião.'; }},
+  ]},
+];
+
+/* =====================================================================
+   GAO — Grupo de Acompanhamento de Obras (situações a partir do estatuto)
+   ===================================================================== */
+const GAO_DECISIONS=[
+ {emoji:'🏗️', cond:()=>G.obra, titulo:'Empreiteira atrasa a obra', art:'Art. 19, I',
+  texto:'A reunião do GAO constatou que a empreiteira está duas semanas atrasada no cronograma.',
+  ops:[
+   {lb:'Registrar em ata e cobrar formalmente, com a equipe técnica', tag:'✅ transparência · ⭐ confiança',
+    fn:()=>{ adjConf(3); obraRitmo(1,0); return 'O GAO registrou o atraso em ata e a empreiteira apresentou um plano de recuperação. O acompanhamento é o papel do GAO (Art. 19, I).'; }},
+   {lb:'Aceitar o atraso sem registrar', tag:'⚠️ a obra desacelera',
+    fn:()=>{ adjConf(-4); obraRitmo(0.6,20); return 'Sem cobrança, o ritmo caiu ainda mais. Veja o canteiro: a obra avança devagar.'; }},
+   {lb:'Pagar hora extra para acelerar', tag:'💸 R$ 25.000 · 🏗️ obra mais rápida',
+    fn:()=>{ G.cash-=25000; obraRitmo(1.5,15); return 'Com hora extra, a obra ganhou ritmo — mas o custo saiu do caixa da cooperativa.'; }},
+  ]},
+ {emoji:'🗣️', pos:true, cond:()=>G.gao && G.day-G.lastDevol>=25, titulo:'Hora da devolutiva à comunidade', art:'Art. 9º e 19, VI',
+  texto:'O estatuto exige que o GAO faça devolutivas periódicas aos pescadores e à comunidade sobre o andamento das obras.',
+  ops:[
+   {lb:'Assembleia comunitária com transporte e lanche', tag:'💸 R$ 3.000 · ⭐⭐ confiança',
+    fn:()=>{ G.cash-=3000; registrarDevolutiva(8); return 'A assembleia lotou. As dúvidas foram respondidas e a comunidade se sentiu parte da obra (Art. 9º: devolutivas são obrigatórias).'; }},
+   {lb:'Publicar um informe no mural da sede', tag:'💸 R$ 300 · ⭐ confiança',
+    fn:()=>{ G.cash-=300; registrarDevolutiva(3); return 'O informe foi publicado. Quem passou pela sede ficou sabendo, mas muita gente não viu.'; }},
+   {lb:'Pular a devolutiva deste mês', tag:'❌ descumpre o estatuto',
+    fn:()=>{ adjConf(-8); G._gaoInfra++; return 'Sem devolutiva, circularam boatos sobre a obra. O Art. 9º torna a devolutiva obrigatória.'; }},
+  ]},
+ {emoji:'🙅', cond:()=>G.gao, titulo:'Promessa de emprego a parentes', art:'Art. 20, VIII',
+  texto:'Chegou ao GAO a denúncia de que um membro está prometendo vagas nos empreendimentos para parentes.',
+  ops:[
+   {lb:'Advertência formal e esclarecer que a seleção é aberta', tag:'✅ Art. 33, I · ⭐ confiança',
+    fn:()=>{ G.gao.advert++; adjConf(4); return 'O membro recebeu advertência e o GAO informou à comunidade que as vagas seguem seleção aberta. É vedado assegurar vagas a terceiros (Art. 20, VIII).'; }},
+   {lb:'Levar à assembleia para destituição', tag:'🗳️ exige ¾ dos membros (Art. 33, II)',
+    fn:()=>{ if(Math.random()<0.7){ adjConf(6); G.gao.destituidos++; return 'Com quórum qualificado de ¾, o membro foi destituído e o 1º suplente assumiu (Art. 29 e 33, II).'; }
+      adjConf(1); G.gao.advert++; return 'A assembleia não alcançou ¾ dos votos para destituir; o membro ficou com advertência registrada.'; }},
+   {lb:'Deixar passar', tag:'❌ fere os princípios do GAO',
+    fn:()=>{ adjConf(-10); G._gaoInfra++; return 'A comunidade soube e a credibilidade do GAO despencou. Os princípios do estatuto foram feridos.'; }},
+  ]},
+ {emoji:'📢', cond:()=>G.gao, titulo:'Propaganda partidária na reunião', art:'Art. 20, III a V',
+  texto:'Em plena reunião do GAO, um participante começou a pedir votos para um candidato.',
+  ops:[
+   {lb:'Interromper e lembrar o estatuto', tag:'✅ reunião segue',
+    fn:()=>{ adjConf(3); return 'A reunião foi retomada. O GAO não se manifesta partidariamente e é vedada propaganda política nas reuniões (Art. 20, III a V).'; }},
+   {lb:'Advertência por escrito', tag:'✅ Art. 33, I',
+    fn:()=>{ G.gao.advert++; adjConf(4); return 'A advertência foi registrada em ata. O grupo mostrou que as regras valem para todos.'; }},
+   {lb:'Deixar falar', tag:'❌ divide o grupo',
+    fn:()=>{ adjConf(-7); G._gaoInfra++; G._moraleDays=0; return 'A reunião virou discussão política e o grupo saiu dividido.'; }},
+  ]},
+ {emoji:'🪑', cond:()=>G.gao, titulo:'Faltas sem justificativa', art:'Art. 30 e 34',
+  texto:'Um membro do GAO faltou a duas reuniões seguidas sem apresentar justificativa.',
+  ops:[
+   {lb:'Convocar o 1º suplente e levar o caso à assembleia', tag:'✅ Art. 30, §1º',
+    fn:()=>{ adjConf(3); return 'O suplente assumiu e o caso foi à assembleia. As presenças ficam no mural de transparência (Art. 30).'; }},
+   {lb:'Ouvir o membro e avaliar a justificativa em grupo', tag:'🤝 Art. 30, §3º, IV',
+    fn:()=>{ adjConf(2); return 'O membro explicou uma situação de trabalho no mar. O grupo aceitou e registrou em ata.'; }},
+   {lb:'Não fazer nada', tag:'❌ enfraquece o quórum',
+    fn:()=>{ adjConf(-5); G._gaoInfra++; return 'Outras faltas vieram depois e as reuniões começaram a não ter quórum.'; }},
+  ]},
+ {emoji:'📜', pos:true, cond:()=>G.gao, titulo:'Ata da reunião atrasada', art:'Art. 31, II e III',
+  texto:'A ata da última reunião ainda não foi validada nem publicada — e já se passou uma semana.',
+  ops:[
+   {lb:'Validar e publicar a ata na sede e por e-mail', tag:'✅ transparência',
+    fn:()=>{ adjConf(4); return 'Ata validada e publicada. O estatuto pede a ata disponível em até 5 dias úteis após a validação (Art. 31, III).'; }},
+   {lb:'Publicar só quando alguém pedir', tag:'⚠️ menos transparência',
+    fn:()=>{ adjConf(-4); return 'Quem procurou a ata não encontrou. A confiança no processo caiu.'; }},
+  ]},
+ {emoji:'✍️', cond:()=>G.gao, titulo:'Abaixo-assinado pede assembleia extraordinária', art:'Art. 13',
+  texto:'62 pescadores e pescadoras assinaram pedindo explicações sobre o cronograma e o uso da contrapartida.',
+  ops:[
+   {lb:'Convocar a assembleia extraordinária', tag:'💸 R$ 2.500 · ⭐⭐ confiança',
+    fn:()=>{ G.cash-=2500; registrarDevolutiva(7); return 'A assembleia foi convocada, como prevê o estatuto (≥ 50 assinaturas, Art. 13, b). As contas foram apresentadas.'; }},
+   {lb:'Responder por escrito', tag:'💸 R$ 200',
+    fn:()=>{ G.cash-=200; adjConf(1); return 'A resposta escrita acalmou parte do grupo, mas muitos queriam falar.'; }},
+   {lb:'Recusar o pedido', tag:'❌ contraria o Art. 13',
+    fn:()=>{ adjConf(-9); G._gaoInfra++; return 'A recusa gerou revolta. O estatuto garante a assembleia extraordinária com 50 assinaturas.'; }},
+  ]},
+ {emoji:'📋', cond:()=>G.obra, titulo:'Licença pendente trava a obra', art:'Art. 19, III',
+  texto:'Falta uma licença municipal para a próxima etapa da obra.',
+  ops:[
+   {lb:'GAO acompanha o processo junto aos órgãos', tag:'💸 R$ 1.000 · ✅ destrava',
+    fn:()=>{ G.cash-=1000; adjConf(3); return 'O GAO participou das reuniões com os órgãos públicos e a licença saiu (Art. 19, III).'; }},
+   {lb:'Deixar só com a empreiteira', tag:'⚠️ pode parar a obra',
+    fn:()=>{ if(Math.random()<.5) return 'A empreiteira resolveu sozinha. Desta vez deu certo.';
+      obraRitmo(0,10); return 'A licença demorou e a obra parou por 10 dias. Veja o canteiro parado.'; }},
+  ]},
+ {emoji:'🔎', pos:true, cond:()=>conselhoAtivo(), titulo:'Conselho Fiscal encontra nota duplicada', art:'Art. 20, XII · Art. 24',
+  texto:'O Conselho Fiscal por Empreendimento (CFE) encontrou uma nota fiscal paga duas vezes.',
+  ops:[
+   {lb:'CFE apura e apresenta em assembleia', tag:'✅ recupera o valor · ⭐ confiança',
+    fn:()=>{ G.cash+=8000; adjConf(6); return 'O valor foi recuperado e o caso apresentado com transparência. Controle social funciona (Art. 20, XII).'; }},
+   {lb:'Resolver internamente, sem divulgar', tag:'⚠️ pouca transparência',
+    fn:()=>{ G.cash+=8000; adjConf(-4); return 'O dinheiro voltou, mas quando o caso vazou a comunidade desconfiou.'; }},
+   {lb:'Arquivar', tag:'❌ prejuízo',
+    fn:()=>{ adjConf(-8); G._gaoInfra++; return 'O prejuízo de R$ 8.000 ficou e o conselho perdeu credibilidade.'; }},
+  ]},
+ {emoji:'💼', pos:true, cond:()=>conselhoAtivo(), titulo:'CAE propõe aumentar a própria remuneração', art:'Art. 24, IV',
+  texto:'O Conselho Administrativo (CAE) propôs dobrar o pró-labore dos seus membros.',
+  ops:[
+   {lb:'Levar à assembleia com parecer do Conselho Fiscal', tag:'🗳️ decisão coletiva',
+    fn:()=>{ adjConf(5); return 'A assembleia aprovou um reajuste menor, com base no parecer do CFE. Só o CAE pode ser remunerado, com recursos do próprio empreendimento (Art. 24, IV).'; }},
+   {lb:'Aprovar direto no CAE', tag:'❌ custo maior · confiança cai',
+    fn:()=>{ Object.values(G.conselhos).forEach(c=>c.pro*=2); adjConf(-8); return 'O aumento passou sem consulta. O custo mensal subiu e a comunidade reagiu mal.'; }},
+   {lb:'Manter como está', tag:'💰 sem mudança',
+    fn:()=>{ return 'A remuneração ficou como estava.'; }},
+  ]},
+];
+
+/* =====================================================================
+   MOTOR DE DECISÕES (mês · demanda do dia · reunião do GAO)
+   ===================================================================== */
+let _decisionOpen=false, _prevSpeed=1, _curDec=null, _curKind='mes', _votes=[];
+function decisionPool(kind){
+  const ok=d=>{ try{ return d.cond(); }catch(e){ return false; } };
+  // o GAO atua até a inauguração (Art. 16); depois seguem devolutivas, atas e o controle social do CAE/CFE
+  let list = kind==='demanda' ? DEMANDAS : kind==='gao' ? GAO_DECISIONS : DECISIONS.concat(GAO_DECISIONS.filter(d=>G.obra||d.pos));
+  let pool=list.filter(ok);
+  const recent=G._recentDec||[]; const fresh=pool.filter(d=>!recent.includes(d.titulo));
+  return fresh.length?fresh:pool;
+}
+function triggerDecision(kind){ kind=kind||'mes'; if(_decisionOpen||G.over)return false;
+  const pool=decisionPool(kind); if(!pool.length)return false;
+  const d=pool[Math.random()*pool.length|0]; _curDec=d; _curKind=kind;
+  G._recentDec=[d.titulo].concat(G._recentDec||[]).slice(0,6);
   _prevSpeed=G.speed||1; setSpeed(0); _decisionOpen=true;
-  pushNews(`${pick.d.emoji} Situação do mês: ${pick.d.titulo}.`,'info'); sfx('pop');
-  if(G.oficina) openOficinaGate(pick.d); else openDecisionOptions(pick.d);
+  const lbl=kind==='demanda'?'Demanda do dia':kind==='gao'?'Reunião do GAO':'Situação do mês';
+  pushNews(`${d.emoji} ${lbl}: ${d.titulo}.`,'info'); sfx('pop');
+  try{ if(d.onShow) d.onShow(); }catch(e){}
+  if(G.oficina) openOficinaGate(d); else openDecisionOptions(d);
   return true;
 }
-function evtHead(d){ return `<div style="text-align:center;margin-bottom:4px">
+function evtHead(d){
+  const kind=_curKind==='demanda'?'Demanda do dia':_curKind==='gao'?'Reunião do GAO':'Decisão do mês';
+  return `<div style="text-align:center;font:700 10.5px 'JetBrains Mono',monospace;letter-spacing:2px;color:var(--aqua);text-transform:uppercase;margin-bottom:6px">${kind}${d.art?` · Estatuto ${d.art}`:''}</div>
+  <div style="text-align:center;margin-bottom:4px">
    <div style="display:inline-flex;width:58px;height:58px;border-radius:50%;background:var(--ink2);border:1px solid var(--line);align-items:center;justify-content:center;font-size:29px">${d.emoji}</div></div>
   <h2 style="text-align:center;line-height:1.18">${d.titulo}</h2>
   <p class="lead" style="text-align:center;margin-bottom:8px">${d.texto}</p>
-  <div style="text-align:center;color:var(--txt-mut);font-size:12px;margin-bottom:13px">🕊️ Sem pressa — o tempo está pausado enquanto você decide com calma.</div>`; }
+  <div style="text-align:center;color:var(--txt-mut);font-size:12px;margin-bottom:13px">🕊️ Sem pressa — o tempo está pausado enquanto vocês decidem.</div>`; }
 function openOficinaGate(d){ openModal(`${evtHead(d)}
    <div style="background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;margin-bottom:10px">
-     🗣️ <b>Modo oficina</b><br><span style="color:var(--txt-dim);font-size:13px">Conversem em grupo e escolham juntos, quando quiserem.</span></div>
-   <button class="btn primary" style="justify-content:center" onclick="showOptions()">Ver as opções</button>`); }
-window.showOptions=()=>{ openDecisionOptions(DECISIONS[_curD]); };
+     🗣️ <b>Modo oficina</b><br><span style="color:var(--txt-dim);font-size:13px">Conversem em grupo. Depois, a assembleia vota: vence a opção com maioria simples (50% + 1 dos presentes).</span></div>
+   <button class="btn primary" style="justify-content:center" onclick="showOptions()">Ver as opções e votar</button>`); }
+window.showOptions=()=>{ openDecisionOptions(_curDec); };
+function availableOps(d){ return d.ops.map((o,i)=>({o,i})).filter(x=>{ try{ return !x.o.cond || x.o.cond(); }catch(e){ return true; } }); }
 function openDecisionOptions(d){
+  const ops=availableOps(d);
+  if(G.oficina){ _votes=d.ops.map(()=>0); renderVoting(); return; }
   openModal(`${evtHead(d)}
-   ${d.ops.map((o,i)=>`<button class="btn" style="display:block;width:100%;text-align:left;margin-bottom:8px;height:auto;padding:11px"
+   ${ops.map(({o,i},k)=>`<button class="btn" style="display:block;width:100%;text-align:left;margin-bottom:8px;height:auto;padding:11px"
       onclick="decide(${i})">
-      <div style="font-weight:700">${String.fromCharCode(65+i)}) ${o.lb}</div>
+      <div style="font-weight:700">${String.fromCharCode(65+k)}) ${o.lb}</div>
       <div style="font-size:11px;color:var(--txt-mut);font-weight:400;margin-top:2px">${o.tag}</div></button>`).join('')}`);
 }
-window.decide=(oi)=>{ const d=DECISIONS[_curD]; let res='';
-  if(d&&d.ops[oi]){ try{res=d.ops[oi].fn()||'';}catch(e){console.error(e);} }
-  refreshTanks(); updateHUD(); if(G.selected)renderInspect();
-  openConsequence(d,d.ops[oi],res); };
-function openConsequence(d,o,res){
+/* votação da assembleia (Art. 31, VI: maioria simples dos presentes) */
+function voteWinner(){ const tot=_votes.reduce((a,b)=>a+b,0); if(!tot) return -1;
+  const mx=Math.max(..._votes), i=_votes.indexOf(mx); return mx>tot/2 ? i : -1; }
+function renderVoting(){ const d=_curDec, ops=availableOps(d), tot=_votes.reduce((a,b)=>a+b,0), w=voteWinner();
+  const need=Math.floor(tot/2)+1;
+  openModal(`${evtHead(d)}
+   <div class="votebox">
+     ${ops.map(({o,i},k)=>`<div class="vrow ${w===i?'win':''}">
+        <div class="vtxt"><b>${String.fromCharCode(65+k)}) ${o.lb}</b><small>${o.tag}</small></div>
+        <div class="stepper"><button onclick="voteAdj(${i},-1)" aria-label="Menos um voto">−</button><div class="n">${_votes[i]}</div><button onclick="voteAdj(${i},1)" aria-label="Mais um voto">+</button></div>
+      </div>`).join('')}
+     <div class="vfoot">${tot?`<span>Votos: <b>${tot}</b> · maioria simples: <b>${need}</b></span>`:'<span>Registrem os votos da assembleia (mãos levantadas).</span>'}
+       <span class="${w>=0?'ok':'no'}">${tot?(w>=0?'✔ Há maioria':'✖ Sem maioria — conversem e votem de novo'):''}</span></div>
+     <div class="vart">Estatuto, Art. 31, VI: “as deliberações serão tomadas pelos presentes, sendo necessário o voto da maioria simples de 50% + 1”.</div>
+   </div>
+   <button class="btn primary" style="justify-content:center;margin-top:10px" ${w>=0?'':'disabled'} onclick="registrarVotacao()">Registrar a decisão da assembleia</button>
+   <div style="text-align:center;margin-top:9px"><span onclick="skipVoting()" style="cursor:pointer;color:var(--txt-mut);font-size:12px;text-decoration:underline">Decidir sem votação</span></div>`);
+}
+window.voteAdj=(i,dv)=>{ _votes[i]=Math.max(0,_votes[i]+dv); renderVoting(); };
+window.registrarVotacao=()=>{ const w=voteWinner(); if(w<0) return; decide(w,_votes.slice()); };
+window.skipVoting=()=>{ const d=_curDec; const ops=availableOps(d);
+  openModal(`${evtHead(d)}
+   ${ops.map(({o,i},k)=>`<button class="btn" style="display:block;width:100%;text-align:left;margin-bottom:8px;height:auto;padding:11px" onclick="decide(${i})">
+      <div style="font-weight:700">${String.fromCharCode(65+k)}) ${o.lb}</div>
+      <div style="font-size:11px;color:var(--txt-mut);font-weight:400;margin-top:2px">${o.tag}</div></button>`).join('')}`); };
+window.decide=(oi,votes)=>{ const d=_curDec; let res='';
+  if(!d||!d.ops[oi]) return;
+  try{ res=d.ops[oi].fn()||''; }catch(e){ console.error(e); }
+  registrarAta(d,d.ops[oi],votes);
+  refreshTanks(); updateHUD(); updateReadyUI(); if(G.selected)renderInspect();
+  openConsequence(d,d.ops[oi],res,votes); };
+function openConsequence(d,o,res,votes){
   const refl = G.oficina? `<div style="background:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px">
      <b style="font-size:13px">🗣️ Para refletir na oficina</b>
      <ul style="margin:6px 0 0 16px;font-size:12.5px;color:var(--txt-dim);line-height:1.5">${REFLEXAO.map(r=>`<li>${r}</li>`).join('')}</ul></div>`:'';
+  const tot=votes?votes.reduce((a,b)=>a+b,0):0;
   openModal(`<h2 style="text-align:center">O que aconteceu?</h2>
    <div class="build-item" style="align-items:flex-start"><div class="bi-ico">${d.emoji}</div>
      <div class="bi-txt"><b style="font-weight:700">${o?o.lb:''}</b><p style="font-size:13px;color:var(--txt);margin-top:4px">${res}</p></div></div>
+   <div style="font-size:11.5px;color:var(--txt-mut);text-align:center;margin-top:2px">📜 Ata nº ${G._ataSeq} registrada no mural de transparência${tot?` · ${G.atas[G.atas.length-1].favor} de ${tot} votos`:''}.</div>
    ${refl}
    <button class="btn primary" style="justify-content:center;margin-top:12px" onclick="finishDecision()">Continuar</button>`);
 }
@@ -2092,6 +2419,7 @@ function dayNight(t){
     if(hemi) hemi.intensity=(IS_MOBILE?0.45:.35)+up*.45;
     if(up>0.3) _skyTmp.copy(_skyDay); else if(up>0.06) _skyTmp.lerpColors(_skyNight,_skyDusk,up/0.3); else _skyTmp.copy(_skyNight);
     scene.background.copy(_skyTmp); if(scene.fog) scene.fog.color.copy(_skyTmp);
+    if(G.chuva>0){ sun.intensity*=.5; scene.background.multiplyScalar(.72); if(scene.fog) scene.fog.color.multiplyScalar(.72); }
     sunUp=up;
     const dome=window.__skyDome&&window.__skyDome(); if(dome){ dome.material.color.copy(_skyTmp).multiplyScalar(0.6+up*0.7); }
     if(GFX.nightEmissive){ const glow=Math.max(0,1-up*1.4); for(const e of _emissiveNight){ if(e.mesh&&e.mesh.material) e.mesh.material.emissiveIntensity=e.base*glow; } }
@@ -2123,6 +2451,8 @@ function animate(){ requestAnimationFrame(animate);
   pulseReady(t);
   rippleWater(t);
   updateFX(dt,t,(G.speed>0?G.speed:0.4));
+  updateRain(dt); growTrees(dt);
+  if(_obraGrp && _obraGrp.userData.jib && G.obra && G.obra.ritmo>0) _obraGrp.userData.jib.rotation.y+=dt*(G.speed>0?0.25:0.06);
   if(supplyPipeMat) supplyPipeMat.emissiveIntensity=.4+Math.sin(t*2.5)*.18;
   // cooperados caminhando + trabalhando
   const moving=G.speed>0?G.speed:0.4;
@@ -2153,6 +2483,7 @@ function updateIndicators(){
   G.sustentabilidade += (Math.max(0,Math.min(100,st))-G.sustentabilidade)*0.05;
   // Confiança da comunidade: caixa positivo, produção vendida e organização elevam
   let cf=50 + (G.cash>0?10:-20) + (orgIndex()-60)*0.3 + (G.producedKg>0?8:0);
+  cf += Math.min(10,G.devolutivas*2) + (G.gao?3:0) + (conselhoAtivo()?4:0) - Math.min(15,G._gaoInfra*3);   // transparência e controle social
   if(G._moraleDays>0)cf+=8;
   G.confianca += (Math.max(0,Math.min(100,cf))-G.confianca)*0.04;
   G.sustentabilidade=Math.max(0,Math.min(100,G.sustentabilidade));
@@ -2180,6 +2511,7 @@ function updateHUD(){
     <div class="k">${icon(s.ic)}${s.k}</div><div class="v">${s.v} ${s.sub?`<small>${s.sub}</small>`:''}</div>
     ${s.bar!==undefined?`<div class="bar"><i style="width:${Math.round(Math.max(0,Math.min(1,s.bar))*100)}%"></i></div>`:''}</div>`).join('');
   const d=G.day, mes=MES[Math.floor(d/30)%12], ano=2027+Math.floor(d/360);
+  updateReadyUI();
   document.getElementById('dateLbl').textContent=`Mês ${Math.min(12,Math.floor(d/30)+1)}/12 · ${mes}/${ano}`;
   const yb=document.getElementById('yrBar'); if(yb) yb.style.width=Math.min(100,d/360*100)+'%';
 }
@@ -2268,30 +2600,32 @@ function updateTicker(){ const el=document.getElementById('tickerTxt'); if(!el||
 setInterval(()=>{ if(G.news.length){ _tickI++; updateTicker(); } },4200);
 
 const NEWS_FLAVOR=[
-  ['Demanda aquecida no atacado da CEASA/RJ eleva o preço da tilápia.','good'],
-  ['PEA Pescarte avança na 4ª Fase de consolidação em Quissamã.','info'],
-  ['Petrobras reforça metas socioambientais no licenciamento da bacia de Campos.','info'],
-  ['Pescadores artesanais do Norte Fluminense ampliam acesso ao PNAE/PAA.','good'],
+  ['Demanda aquecida no atacado regional (CEASA) eleva o preço da tilápia.','good'],
+  ['PEA Pescarte acompanha a consolidação da cooperativa de {CID}.','info'],
+  ['Licenciamento ambiental cobra metas socioambientais dos projetos de geração de renda.','info'],
+  ['Pescadores artesanais da região ampliam acesso ao PNAE/PAA.','good'],
   ['Especialistas apontam aquaponia e filtros rizosféricos como tendência.','info'],
-  ['Calor atípico no litoral acende alerta sanitário para piscicultores.','warn'],
-  ['Cooperativas de aquicultura debatem economia solidária em Macaé.','info'],
-  ['Feira do peixe movimenta Quissamã e eleva a procura por tilápia fresca.','good'],
+  ['Calor atípico acende alerta sanitário para piscicultores.','warn'],
+  ['Cooperativas de aquicultura debatem economia solidária em encontro regional.','info'],
+  ['Feira do peixe movimenta {CID} e eleva a procura por tilápia fresca.','good'],
+  ['GAO de {CID} publica ata da última reunião no mural da sede.','info'],
 ];
-function maybeNewsFlavor(){ if(Math.random()<.5){ const n=NEWS_FLAVOR[Math.random()*NEWS_FLAVOR.length|0]; pushNews(n[0],n[1]); } }
+function maybeNewsFlavor(){ if(Math.random()<.5){ const n=NEWS_FLAVOR[Math.random()*NEWS_FLAVOR.length|0]; pushNews(n[0].replace(/\{CID\}/g,cid()),n[1]); } }
 
 const BUYER_POOL=[
-  {nome:'CEASA/RJ (atacado)',emoji:'🏪',mul:1.00,term:0,risk:0,vmin:3000,vmax:9000,pac:.55,fala:'Levo o que tiver, preço de mercado.'},
+  {nome:'CEASA regional (atacado)',emoji:'🏪',mul:1.00,term:0,risk:0,vmin:3000,vmax:9000,pac:.55,fala:'Levo o que tiver, preço de mercado.'},
   {nome:'Peixaria Mar Azul',emoji:'🐟',mul:1.08,term:30,risk:.04,vmin:1500,vmax:4000,pac:.6,fala:'Pago melhor, mas faturo em 30 dias.'},
-  {nome:'Rede Supermercados N.F.',emoji:'🛒',mul:1.12,term:30,risk:.03,vmin:4000,vmax:12000,pac:.45,fala:'Quero volume e recorrência.'},
+  {nome:'Rede de Supermercados Regional',emoji:'🛒',mul:1.12,term:30,risk:.03,vmin:4000,vmax:12000,pac:.45,fala:'Quero volume e recorrência.'},
   {nome:'Merenda PNAE/PAA',emoji:'🏫',mul:1.20,term:60,risk:.01,vmin:2000,vmax:6000,pac:.2,inst:true,fala:'Preço institucional justo — exige acesso ao programa.'},
   {nome:'Frigorífico Litoral',emoji:'🏭',mul:0.95,term:0,risk:0,vmin:6000,vmax:15000,pac:.7,fala:'Pago à vista, mas aperto no preço.'},
   {nome:'Atravessador',emoji:'🚐',mul:0.86,term:0,risk:.12,vmin:1000,vmax:5000,pac:.85,fala:'Dinheiro na hora… confia em mim.'},
   {nome:'Restaurante Beira-Mar',emoji:'🍤',mul:1.16,term:15,risk:.05,vmin:400,vmax:1500,pac:.4,fala:'Quero peixe de qualidade, pago bem.'},
-  {nome:'Distribuidora de Filé N.F.',emoji:'🧊',mul:1.22,term:15,risk:.03,vmin:2000,vmax:7000,pac:.5,req:'ubp',fala:'Filé resfriado padronizado? Levo toda semana.'},
+  {nome:'Distribuidora de Filé Regional',emoji:'🧊',mul:1.22,term:15,risk:.03,vmin:2000,vmax:7000,pac:.5,req:'ubp',fala:'Filé resfriado padronizado? Levo toda semana.'},
   {nome:'Merenda Estadual (processados)',emoji:'🍱',mul:1.30,term:45,risk:.01,vmin:3000,vmax:8000,pac:.25,req:'upp',inst:true,fala:'Nuggets e almôndega de CMS para as escolas da região.'},
 ];
 function readyKg(){ return G.tanks.filter(t=>t.state==='pronto').reduce((s,t)=>s+t.biomass,0); }
 function spawnBuyer(){
+  if(G.modoDecisoes) return;                     // no Modo decisões a equipe vende no mercado
   const rk=readyKg(); if(rk<300||G.buyers.length>=3) return;
   const tpl=BUYER_POOL[Math.random()*BUYER_POOL.length|0];
   if(tpl.inst && !G.hasPNAE) return; // institucional só com acesso ao programa
@@ -2395,15 +2729,17 @@ const TOOLS=[
   {id:'sell',ico:'coins',lb:'Vender',act:()=>openBuyers(),tip:'Compradores, negociação e venda à vista'},
   {id:'risk',ico:'alert',lb:'Riscos',act:()=>openRiskMatrix(),tip:'Matriz de probabilidade × impacto'},
   {id:'learn',ico:'book',lb:'Aprender',act:openLearn,tip:'Conceitos, tutorial e oficinas de processos'},
+  {id:'mural',ico:'vote',lb:'Mural',act:()=>openMural(),tip:'Mural de transparência: GAO, obras, atas e contas'},
 ];
 function setClickTool(tool,msg){ if(G.tool===tool){G.tool='inspect';renderTools();toast('info','Modo inspeção','Clique num tanque para ver os detalhes.');return;}
   G.tool=tool; renderTools(); if(msg)toast('info','Modo ativo',msg); }
 window.setClickTool=setClickTool;
 function renderTools(){ document.getElementById('tools').innerHTML=TOOLS.map((t,i)=>`
   <div class="tool ${t.mode&&G.tool===t.mode?'on':''}" data-t="${t.id}" role="button" tabindex="0" title="${t.tip} (${i+1})" aria-label="${t.lb}">
-    <span class="key">${i+1}</span><div class="ico">${icon(t.ico)}</div><div class="lb">${t.lb}</div></div>`).join('');
+    <span class="key">${i+1}</span>${t.id==='sell'?'<span class="badge"></span>':''}<div class="ico">${icon(t.ico)}</div><div class="lb">${t.lb}</div></div>`).join('');
   document.querySelectorAll('.tool').forEach(el=>{ el.onclick=()=>{ const t=TOOLS.find(x=>x.id===el.dataset.t);
     if(t.act)t.act(); }; el.onkeydown=e=>{ if(e.key==='Enter'){ e.preventDefault(); el.onclick(); } }; });
+  updateReadyUI();
 }
 function openStock(){ const v=G.tanks.filter(t=>t.state==='vazio').length, e=G.tanks.filter(t=>t.state==='engorda').length, p=G.tanks.filter(t=>t.state==='pronto').length;
   openModal(`<span class="close-x" onclick="closeModal()">✕</span><h2>🐟 <span>Criar peixe</span></h2>
@@ -2421,6 +2757,9 @@ function openLearn(){ openModal(`<span class="close-x" onclick="closeModal()">�
   <div class="build-item"><div class="bi-ico">⚡</div><div class="bi-txt"><b>Energia</b><p>As bombas do RAS dependem de energia. Queda de luz derruba o oxigênio — gerador e fotovoltaica protegem.</p></div></div>
   <div class="build-item"><div class="bi-ico">💰</div><div class="bi-txt"><b>Comercialização</b><p>Negocie preço e prazo com compradores. À vista é seguro; a prazo paga mais, mas há risco de calote. PNAE/PAA dá preço justo e estável.</p></div></div>
   <div class="build-item"><div class="bi-ico">🤝</div><div class="bi-txt"><b>Cooperativa</b><p>22 famílias decidem juntas. Organizar bem as equipes (alimentação, água, despesca, manutenção, compostagem, administração) é o coração da gestão.</p></div></div>
+  <div class="sechd">Governança participativa</div>
+  <div class="linkcard" role="button" tabindex="0" onclick="openEstatuto()" style="cursor:pointer">${icon('vote')}<div><b>Estatuto do GAO, em resumo</b><p>Composição, reuniões, quórum, transparência, CAE/CFE e regime disciplinar</p></div></div>
+  <div class="linkcard" role="button" tabindex="0" onclick="openMural()" style="cursor:pointer">${icon('news')}<div><b>Mural de transparência</b><p>Atas das decisões, devolutivas, obras e contas da cooperativa</p></div></div>
   <div class="sechd">Oficinas de processos (BPMN)</div>
   <p class="lead" style="margin-bottom:8px">Veja, passo a passo, como cada unidade funciona na prática — e anote quem faz o quê.</p>
   <a class="linkcard" href="../oficinas/oficina-upa.html" target="_blank" rel="noopener">${icon('flow')}<div><b>UPA — Produção Aquícola</b><p>Da chegada dos alevinos à despesca</p></div></a>
@@ -2449,15 +2788,16 @@ window.openFeed=openFeed; window.comprarRacao=comprarRacao;
 function openBuild(){ openModal(`<span class="close-x" onclick="closeModal()">✕</span>
   <h2>Investir na <span>infraestrutura</span></h2>
   <p class="lead">Condomínio solidário de produção (economia solidária). Melhorias reduzem risco e custo.</p>
-  ${BUILDS.map(b=>{const o=b.has(),lk=b.req&&!b.req(),c=G.cash>=b.cost&&!o&&!lk;return `<div class="build-item" ${lk?'style="opacity:.55"':''}><div class="bi-ico">${b.emoji}</div>
+  ${G.obra?`<div class="build-item" style="border-color:var(--amber)"><div class="bi-ico">🏗️</div><div class="bi-txt"><b>Obra da ${OBRA_NOME[G.obra.id]} — ${Math.round(G.obra.prog)}%</b><p>Ritmo ${ritmoTxt()}. Acompanhe no Mural de transparência (9).</p></div></div>`:''}
+  ${BUILDS.map(b=>{const ob=G.obra&&G.obra.id===b.id,o=b.has(),lk=b.req&&!b.req()&&!ob,c=G.cash>=b.cost&&!o&&!lk&&!ob;return `<div class="build-item" ${lk?'style="opacity:.55"':''}><div class="bi-ico">${b.emoji}</div>
     <div class="bi-txt"><b>${b.name}</b><p>${b.desc}</p>${lk?`<p style="color:var(--amber)">🔒 ${b.reqTxt}</p>`:''}</div>
-    <button class="btn ${o?'':'primary'}" style="width:140px" ${o||!c?'disabled':''} onclick="doBuild('${b.id}')">
-      <span>${o?'Instalado':lk?'Bloqueado':'Construir'}</span><small>${money(b.cost)}</small></button></div>`;}).join('')}`);
+    <button class="btn ${o||ob?'':'primary'}" style="width:140px" ${o||!c?'disabled':''} onclick="doBuild('${b.id}')">
+      <span>${o?'Instalado':ob?'Em obra':lk?'Bloqueado':((b.id==='ubp'||b.id==='upp')&&!G.gao?'Eleger GAO':'Construir')}</span><small>${ob?Math.round(G.obra.prog)+'%':money(b.cost)}</small></button></div>`;}).join('')}`);
 }
 window.openBuild=openBuild; window.doBuild=doBuild;
 function openHelp(){ openModal(`<span class="close-x" onclick="closeModal()">✕</span>
   <h2>Como <span>gerir</span> a UPA</h2>
-  <p class="lead">Gestor da UPA de Quissamã: 132 tanques em 22 módulos com recirculação (RAS) integrada e filtros rizosféricos, cultivo de tilápia em ciclos de 6 meses. <b>Meta:</b> ${money(CFG.goalProfit)} de lucro acumulado.</p>
+  <p class="lead">Gestor da UPA de ${cid()}: 132 tanques em 22 módulos com recirculação (RAS) integrada e filtros rizosféricos, cultivo de tilápia em ciclos de 6 meses. <b>Meta:</b> ${money(CFG.goalProfit)} de lucro acumulado.</p>
   <div class="helpgrid">
     <div><b>👥 Equipes</b> distribua os 22 cooperados entre as 6 funções.</div>
     <div><b>🌾 Alimentação</b> cada tratador cobre ~66 tanques.</div>
@@ -2475,32 +2815,37 @@ function openHelp(){ openModal(`<span class="close-x" onclick="closeModal()">✕
 window.openHelp=openHelp;
 const INTRO=[
  {emoji:'🏞️', titulo:'A comunidade recebeu uma <span>Unidade Aquícola</span>',
-  texto:'Em Quissamã, no Norte Fluminense, o PEA Pescarte (medida do licenciamento da Petrobras conduzida pelo IBAMA) entregou à comunidade uma <b>Unidade de Produção Aquícola</b>: 132 tanques em 22 módulos, com recirculação de água (RAS) e filtros rizosféricos.<br><br>O objetivo é <b>produzir pescado, gerar renda e manter a atividade sustentável</b>.<br><br>🔗 <b>Rota da Tilápia:</b> ao provar boa gestão, a cooperativa pode captar convênios e construir a <b>UBP</b> (beneficiamento — filé) e a <b>UPP</b> (processamento — CMS), completando a <b>Rota da Tilápia</b> e multiplicando o valor de cada kg produzido.'},
+  texto:'Em {CID}, o PEA Pescarte (medida de mitigação do licenciamento ambiental federal, conduzido pelo IBAMA) entregou à comunidade uma <b>Unidade de Produção Aquícola</b>: 132 tanques em 22 módulos, com recirculação de água (RAS) e filtros rizosféricos.<br><br>O objetivo é <b>produzir pescado, gerar renda e manter a atividade sustentável</b>.<br><br>🔗 <b>Rota da Tilápia:</b> ao provar boa gestão, a cooperativa pode captar convênios e construir a <b>UBP</b> (beneficiamento — filé) e a <b>UPP</b> (processamento — CMS), completando a <b>Rota da Tilápia</b> e multiplicando o valor de cada kg produzido.'},
  {emoji:'🤝', titulo:'Você decide <span>junto aos cooperados</span>',
   texto:'Você é a pessoa responsável por tomar as decisões da cooperativa — <b>junto aos 22 cooperados</b> (uma família por módulo).<br><br>Vai organizar as equipes, criar e alimentar os peixes, cuidar da água, melhorar a estrutura e <b>negociar a venda</b> com compradores da região. No caminho, surgem imprevistos: você escolhe o que fazer.'},
  {emoji:'🎯', titulo:'Seu <span>desafio</span>',
-  texto:`Conduzir a Unidade Aquícola Comunitária por <b>12 meses</b>. O sucesso não é só dinheiro — é manter a água boa, os peixes saudáveis, a equipe organizada, o ambiente sustentável e a <b>confiança da comunidade</b>.<br><br>A cada mês há um <b>balanço</b> e uma <b>decisão</b> com consequências. No fim, sai um <b>relatório de gestão</b> com estrelas.<br><br><b>Botões:</b> 🐟 criar peixe · 🍚 alimentar · 💧 cuidar da água · 👥 organizar equipe · 🏗️ melhorar estrutura · 💰 vender produção · 📊 riscos · 📚 aprender.`},
+  texto:`Conduzir a Unidade Aquícola Comunitária por <b>12 meses</b>. O sucesso não é só dinheiro — é manter a água boa, os peixes saudáveis, a equipe organizada, o ambiente sustentável e a <b>confiança da comunidade</b>.<br><br>A cada mês há um <b>balanço</b> e uma <b>decisão</b> com consequências. No fim, sai um <b>relatório de gestão</b> com estrelas.<br><br>Para construir a UBP e a UPP, a comunidade elege o <b>GAO — Grupo de Acompanhamento de Obras</b>, que acompanha a obra, faz devolutivas e registra tudo em ata, como manda o estatuto.<br><br><b>Botões:</b> 🐟 criar peixe · 🍚 alimentar · 💧 cuidar da água · 👥 equipes · 🏗️ estrutura · 💰 vender · 📊 riscos · 📚 aprender · 🗳️ mural de transparência.`},
 ];
 let _introStep=0;
 function openIntro(){ _introStep=0; renderIntro(); }
+function introToggle(on,fn,emoji,title,desc){ return `<div onclick="${fn}" role="switch" aria-checked="${on}" class="itog ${on?'on':''}">
+     <div style="font-size:22px">${emoji}</div><div style="flex:1"><b style="font-size:13px">${title}</b>
+     <p style="font-size:11px;color:var(--txt-dim);margin-top:1px">${desc}</p></div><span class="sw ${on?'on':''}"></span></div>`; }
 function renderIntro(){ const s=INTRO[_introStep], last=_introStep===INTRO.length-1;
+  const texto=s.texto.replace(/\{CID\}/g,`<b class="cidTxt">${esc(cid())}</b>`);
   openModal(`<div style="font-size:40px;text-align:center">${s.emoji}</div>
    <h2 style="text-align:center;line-height:1.15">${s.titulo}</h2>
-   <p class="lead" style="text-align:center;font-size:14px">${s.texto}</p>
+   <p class="lead" style="text-align:center;font-size:14px">${texto}</p>
+   ${_introStep===0?`<div class="cityset"><label for="cityIn">Em qual município fica a sua Unidade Aquícola?</label>
+     <input id="cityIn" maxlength="40" autocomplete="off" placeholder="Aquipólis (cidade fictícia)" value="${esc(G.cidade)}" oninput="setCity(this.value)">
+     <small>Deixe em branco para usar a cidade fictícia de Aquipólis. O nome aparece no jogo, nas notícias e no mural.</small></div>`:''}
    <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin:6px 0 12px">
      ${INTRO.map((_,i)=>`<span style="width:8px;height:8px;border-radius:50%;background:${i===_introStep?'var(--aqua)':'#274049'}"></span>`).join('')}
    </div>
-   ${last?`<div onclick="toggleOficina()" style="display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--ink2);border:1px solid ${G.oficina?'var(--aqua)':'var(--line)'};border-radius:11px;padding:10px 12px;margin-bottom:10px">
-     <div style="font-size:22px">🗣️</div><div style="flex:1"><b style="font-size:13px">Modo oficina</b>
-     <p style="font-size:11px;color:var(--txt-dim);margin-top:1px">Nas decisões, o grupo conversa antes de escolher e reflete depois. Ideal para dinâmica em grupo.</p></div>
-     <div style="width:40px;height:22px;border-radius:12px;background:${G.oficina?'var(--aqua)':'#33424a'};position:relative;flex-shrink:0">
-       <div style="position:absolute;top:2px;left:${G.oficina?'20px':'2px'};width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s"></div></div></div>`:''}
+   ${last?introToggle(G.oficina,'toggleOficina()','🗣️','Modo oficina','O grupo conversa e decide por votação da assembleia (maioria simples, como no estatuto do GAO) e reflete depois. Ideal para turmas.')
+     +introToggle(G.modoDecisoes,'toggleModoDecisoes()','🎯','Modo decisões','A equipe cuida da rotina (povoar, alimentar, despescar e vender) e vocês só decidem: demandas do dia, reuniões do GAO e o mês. As escolhas mudam o cenário.'):''}
    <div style="display:flex;gap:8px">
      ${_introStep>0?`<button class="btn" style="flex:1;justify-content:center" onclick="introStep(-1)">‹ Voltar</button>`:''}
      <button class="btn primary" style="flex:2;justify-content:center;font-size:15px;padding:13px"
        onclick="${last?'startTutorial(false)':'introStep(1)'}">${last?'▶ Como jogar':'Continuar ›'}</button>
    </div>
    ${last?`<div style="text-align:center;margin-top:11px"><span onclick="startGame()" style="cursor:pointer;color:var(--txt-mut);font-size:12.5px;text-decoration:underline">Pular tutorial e começar →</span></div>`:''}`); }
+window.toggleModoDecisoes=()=>{ G.modoDecisoes=!G.modoDecisoes; renderIntro(); };
 function toggleOficina(){ G.oficina=!G.oficina; renderIntro(); }
 window.toggleOficina=toggleOficina;
 function introStep(d){ _introStep=Math.max(0,Math.min(INTRO.length-1,_introStep+d)); renderIntro(); }
@@ -2522,6 +2867,12 @@ const TUTORIAL=[
   texto:`A cada mês o jogo <b>pausa sozinho</b>: primeiro você toma uma <b>decisão</b> sobre um imprevisto (água, ração, doença, chuva, mercado…) e depois vê o <b>balanço do mês</b>, já com o resultado da sua escolha. <b>Sem pressa</b> — o tempo fica parado enquanto você pensa.`},
  {emoji:'⚠️', titulo:'Riscos e <span>modo oficina</span>',
   texto:`Em <b>📊 Riscos</b> você vê a matriz de <b>probabilidade × impacto</b> para se prevenir. O <b>Modo oficina</b> (ligado na tela inicial) faz o grupo conversar antes de decidir e refletir depois — ideal para dinâmicas coletivas.`},
+ {emoji:'🪣', titulo:'Aviso de <span>despesca</span>',
+  texto:`Quando tanques ficam no ponto, aparece um <b>aviso grande no centro da tela</b> e uma <b>faixa dourada</b> no topo com a quantidade de tanques prontos — ninguém precisa ficar clicando tanque por tanque. Toque no aviso para negociar a venda. O botão <b>💰 Vender</b> também mostra um contador.`},
+ {emoji:'🗳️', titulo:'GAO e <span>transparência</span>',
+  texto:`Para construir a UBP e a UPP, a comunidade elege o <b>GAO</b> (9 a 21 membros, ao menos 30% de mulheres e 1 a 3 jovens). Durante a obra, o GAO se reúne e enfrenta situações do estatuto: atrasos, devolutivas, faltas, promessa de emprego… Na inauguração nascem o <b>CAE</b> e o <b>CFE</b>. Tudo vira ata no <b>🗳️ Mural de transparência</b> (tecla 9).`},
+ {emoji:'🎯', titulo:'Modo <span>decisões</span>',
+  texto:`Prefere só decidir? Ligue o <b>Modo decisões</b> na tela inicial (ou em Configurações): a equipe cuida da rotina e, a cada 10 dias, surge uma <b>demanda do dia</b>. As escolhas mudam o cenário — chuva, árvores plantadas em mutirão, a obra que avança ou para.`},
  {emoji:'⏱️', titulo:'Tempo e <span>câmera</span>',
   texto:`Velocidade: <b>❚❚</b> pausa · <b>▶</b> normal · <b>▶▶ / ▶▶▶</b> aceleram. Câmera: <b>arraste</b> para mover, <b>pinça</b> ou <b>scroll</b> (ou os botões <b>＋ ／ －</b>) para zoom e <b>⌖</b> para centralizar. No fim dos 12 meses sai o <b>relatório de gestão</b> com estrelas. Boa gestão! 🐟`},
 ];
@@ -2545,15 +2896,281 @@ function renderTutorial(){ const s=TUTORIAL[_tutStep], last=_tutStep===TUTORIAL.
 function tutStep(d){ _tutStep=Math.max(0,Math.min(TUTORIAL.length-1,_tutStep+d)); renderTutorial(); }
 function tutDone(){ if(_tutFromGame){ if(_pauseOpen) openPause(); else closeModal(); } else { startGame(); } }
 window.tutStep=tutStep; window.tutDone=tutDone;
-function startGame(){ hideMenu(); closeModal(); G.started=true; setSpeed(1); audioOn(); sfx('good');
+function startGame(){ hideMenu(); closeModal(); G.started=true; setSpeed(1); audioOn(); sfx('good'); setCityLabels();
   G.monthSnap={cash:G.cash,prod:0};
   document.getElementById('teams').classList.add('show'); renderTeams();
   showHint();
-  pushNews('🐟 UPA de Quissamã assume nova gestão e inicia ciclo produtivo de tilápia.','info');
+  pushNews(`🐟 UPA de ${cid()} assume nova gestão e inicia ciclo produtivo de tilápia.`,'info');
   pushNews('🤝 PEA Pescarte acompanha a cooperativa na 4ª Fase de consolidação.','info');
-  toast('info','Bem-vindo à gestão',G.oficina?'Modo oficina ligado: decidam em grupo a cada mês.':'Organize as equipes, cuide da produção e decida a cada mês.');
+  toast('info','Bem-vindo à gestão',G.modoDecisoes?'Modo decisões: a equipe cuida da rotina e vocês decidem as demandas e o mês.':G.oficina?'Modo oficina ligado: decidam em grupo, por votação, a cada mês.':'Organize as equipes, cuide da produção e decida a cada mês.');
   saveGame(true); }
 window.startGame=startGame;
+
+/* =====================================================================
+   MUNICÍPIO CONFIGURÁVEL — o jogo serve para qualquer cidade
+   ===================================================================== */
+function cid(){ return (G.cidade||'').trim() || 'Aquipólis'; }
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function setCityLabels(){ const b=document.getElementById('brandCity'); if(b) b.textContent='UPA · '+cid(); }
+window.setCity=v=>{ G.cidade=String(v||'').replace(/[<>&"'`]/g,'').slice(0,40); PREFS.cidade=G.cidade; savePrefs();
+  document.querySelectorAll('.cidTxt').forEach(e=>{ e.textContent=cid(); }); setCityLabels(); };
+
+/* =====================================================================
+   AVISO DE DESPESCA — “alarme” visível para toda a turma
+   (Estatuto, Art. 20, XII, c: informação acessível e em tempo hábil)
+   ===================================================================== */
+function readyCount(){ return G.tanks.filter(t=>t.state==='pronto').length; }
+function updateReadyUI(){ const n=readyCount(); G._prontosPrev=n;
+  document.body.classList.toggle('has-ready', n>0 && G.started && !G.over);
+  const el=document.getElementById('readyBanner');
+  if(el){ if(n>0 && G.started && !G.over){
+      el.innerHTML=`<span class="rb-dot"></span><b>${n} tanque${n>1?'s':''} pronto${n>1?'s':''} para despesca</b><span class="rb-go">Vender agora${IS_MOBILE?'':' · 6'}</span>`;
+      el.classList.add('show'); } else el.classList.remove('show'); }
+  const b=document.querySelector('.tool[data-t="sell"] .badge'); if(b){ b.textContent=n; b.style.display=n?'flex':'none'; } }
+function announceReady(n,novos){ if(G.day-(G._readyAnn==null?-99:G._readyAnn)<3) return; G._readyAnn=G.day;
+  const c=document.getElementById('callout'); if(!c) return;
+  c.innerHTML=`<div class="co-ico">🪣</div><div><div class="co-k">Aviso à turma</div>
+    <b>${novos>1?novos+' tanques ficaram prontos':'Um tanque ficou pronto'} para a despesca!</b>
+    <p>${n} tanque${n>1?'s':''} no ponto de abate. Toque aqui para negociar a venda.</p></div>`;
+  c.classList.remove('show'); void c.offsetWidth; c.classList.add('show'); sfx('good'); setTimeout(()=>sfx('coin'),200);
+  clearTimeout(announceReady._t); announceReady._t=setTimeout(()=>c.classList.remove('show'),5600); }
+
+/* =====================================================================
+   MODO DECISÕES — a equipe cuida da rotina; o grupo só decide
+   ===================================================================== */
+function autoRotina(){ if(!G.modoDecisoes) return;
+  const active=G.tanks.filter(t=>t.state!=='vazio');
+  const need=active.reduce((s,t)=>s+feedFor(t),0);
+  if(G.feed<Math.max(8000,need*12) && G.cash>60000){ const ton=Math.min(20,Math.floor((CFG.feedMax-G.feed)/1000));
+    if(ton>0){ G.cash-=ton*1000*CFG.feedPrice; G.feed+=ton*1000; } }
+  if(readyCount()) colherProntos(true);
+  // povoamento escalonado e prudente: só povoa se o caixa comporta levar os tanques ativos até a despesca
+  const ativos=G.tanks.filter(t=>t.state!=='vazio').length;
+  if(G.cash-ativos*8000>80000){ const t=G.tanks.find(t=>t.state==='vazio'); if(t) povoarSil(t); }
+  // emergência: caixa muito negativo → despesca antecipada dos tanques mais adiantados
+  if(G.cash<CFG.ruinCash*0.55){ const alvo=G.tanks.filter(t=>t.state==='engorda'&&t.day>=110).sort((a,b)=>b.day-a.day).slice(0,3);
+    if(alvo.length){ const E=teamEff(); let tot=0;
+      alvo.forEach(t=>{ const liq=t.biomass*CFG.pricePerKg*G.priceMul*E.priceMul*E.sellMul*chainMul()*(1-CFG.taxRate);
+        G.cash+=liq; G.profitAcc+=liq; G.producedKg+=t.biomass; tot+=liq; t.state='vazio'; t.fish=0; t.biomass=0; t.day=0; t.wq=100; });
+      toastEvery('emerg',5,'warn','Despesca antecipada',`Caixa no vermelho: a equipe despescou ${alvo.length} tanque(s) antes do ponto (${money(tot)}).`); } }
+}
+
+/* =====================================================================
+   ATAS E DEVOLUTIVAS (Estatuto, Art. 9º, 19 VI, 30 e 31)
+   ===================================================================== */
+function addAta(emoji,titulo,escolha,art,votos,favor,kind){
+  G._ataSeq=(G._ataSeq||0)+1;
+  G.atas.push({n:G._ataSeq, dia:G.day, emoji, titulo, escolha, art:art||'', votos:votos||0, favor:favor||0, kind:kind||'gao'});
+  if(G.atas.length>80) G.atas.shift(); }
+function registrarAta(d,o,votes){ const i=d.ops.indexOf(o), tot=votes?votes.reduce((a,b)=>a+b,0):0;
+  addAta(d.emoji,d.titulo,o.lb,d.art,tot,votes?votes[i]:0,_curKind); }
+function registrarDevolutiva(conf){ G.devolutivas++; G.lastDevol=G.day; adjConf(conf);
+  pushNews(`🗣️ Devolutiva à comunidade de ${cid()}: andamento das obras e contas apresentados.`,'good'); }
+window.realizarDevolutiva=()=>{ if(G.day-G.lastDevol<20) return; if(G.cash<1500){ toast('bad','Sem caixa','A devolutiva custa R$ 1.500 (transporte e lanche).'); return; }
+  G.cash-=1500; registrarDevolutiva(5);
+  addAta('🗣️','Devolutiva à comunidade','Assembleia de devolutiva realizada (transporte e alimentação garantidos)','Art. 9º e 31, §único');
+  toast('good','Devolutiva realizada','A comunidade acompanhou as contas e as decisões. Confiança em alta.'); updateHUD(); openMural(); };
+
+/* =====================================================================
+   GAO — eleição, obra acompanhada e conselhos (CAE/CFE)
+   ===================================================================== */
+function conselhoAtivo(){ return Object.keys(G.conselhos||{}).length>0; }
+function consBonus(){ return Math.min(.08, Object.values(G.conselhos||{}).reduce((s,c)=>s+c.cae*0.008,0)); }
+function obraRitmo(r,dias){ if(!G.obra) return; G.obra.ritmo=r; G.obra.ritmoDias=dias; }
+function ritmoTxt(){ const r=G.obra?G.obra.ritmo:1; return r<=0?'parada':r<1?'lenta':r>1?'acelerada':'normal'; }
+const OBRA_POS={ubp:{x:-30,z:-96,w:58,d:32}, upp:{x:46,z:-96,w:52,d:32}};
+const OBRA_NOME={ubp:'UBP — Beneficiamento', upp:'UPP — Processamento'};
+
+let _gaoForm={membros:12, mulheres:4, jovens:2, target:'ubp'};
+function gaoChecks(){ const f=_gaoForm, minM=Math.ceil(f.membros*0.3);
+  return [
+    {ok:f.membros>=9&&f.membros<=21, t:'Entre 9 e 21 representantes eleitos', a:'Art. 27, I'},
+    {ok:f.mulheres>=minM, t:`Pelo menos 30% de vagas para mulheres (mínimo ${minM})`, a:'Art. 27, II'},
+    {ok:f.jovens>=1&&f.jovens<=3, t:'De 1 a 3 vagas para jovens de 16 a 29 anos', a:'Art. 27, IV'},
+  ]; }
+function openGaoElection(id){ if(id) _gaoForm.target=id;
+  const f=_gaoForm, b=BUILDS.find(x=>x.id===f.target), ch=gaoChecks(), ok=ch.every(c=>c.ok), cash=G.cash>=b.cost;
+  const st=(k,v,min,max)=>`<div class="stepper"><button onclick="gaoAdj('${k}',-1)" ${v<=min?'disabled':''} aria-label="Diminuir">−</button><div class="n">${v}</div><button onclick="gaoAdj('${k}',1)" ${v>=max?'disabled':''} aria-label="Aumentar">+</button></div>`;
+  openModal(`<span class="close-x" onclick="closeModal()"></span>
+   <div class="kick2">Estatuto do GAO · Art. 1º, 22 a 27</div>
+   <h2>Eleição do <span>GAO</span></h2>
+   <p class="lead">Antes da obra da <b>${OBRA_NOME[f.target]}</b>, a comunidade de pesca de <b>${esc(cid())}</b> elege o
+     <b>Grupo de Acompanhamento de Obras</b>: um grupo voluntário (Art. 10), democrático e sem hierarquia (Art. 20, I),
+     que acompanha a obra, cobra prazos, faz devolutivas e registra tudo em ata. A votação é secreta, nas comunidades (Art. 23).</p>
+   <div class="setrow"><div class="l"><b>Representantes eleitos</b><p>Titulares do GAO; cada um terá suplente (Art. 29).</p></div>${st('membros',f.membros,5,25)}</div>
+   <div class="setrow"><div class="l"><b>Mulheres eleitas</b><p>Vagas não preenchidas por mulheres vão aos demais (Art. 27, III).</p></div>${st('mulheres',f.mulheres,0,f.membros)}</div>
+   <div class="setrow"><div class="l"><b>Jovens (16 a 29 anos)</b><p>Participação da juventude da pesca.</p></div>${st('jovens',f.jovens,0,5)}</div>
+   <div class="checks">${ch.map(c=>`<div class="${c.ok?'ok':'no'}"><span>${c.ok?'✔':'✖'}</span>${c.t} <em>${c.a}</em></div>`).join('')}</div>
+   <p class="lead" style="font-size:12px;margin:10px 0">Depois da inauguração, os membros do GAO formam o Conselho Administrativo (CAE) e o Conselho Fiscal (CFE) do empreendimento (Art. 16 e 24).</p>
+   <button class="btn primary" style="justify-content:space-between;gap:14px;text-align:left" ${ok&&cash?'':'disabled'} onclick="confirmGao()">
+     <span>${ok?(cash?'Realizar a eleição e iniciar a obra':'Caixa insuficiente para a contrapartida'):'Ajuste a composição para cumprir o estatuto'}</span><small>contrapartida ${money(b.cost)}</small></button>`); }
+window.gaoAdj=(k,d)=>{ const f=_gaoForm; f[k]+=d;
+  f.membros=Math.max(5,Math.min(25,f.membros)); f.mulheres=Math.max(0,Math.min(f.membros,f.mulheres)); f.jovens=Math.max(0,Math.min(5,f.jovens));
+  openGaoElection(); };
+window.confirmGao=()=>{ const f=_gaoForm; if(!gaoChecks().every(c=>c.ok)) return;
+  G.gao={membros:f.membros, mulheres:f.mulheres, jovens:f.jovens, advert:0, destituidos:0, eleitoDia:G.day};
+  adjConf(4);
+  pushNews(`🗳️ Comunidade de ${cid()} elege o GAO: ${f.membros} membros, ${f.mulheres} mulheres e ${f.jovens} jovens.`,'good');
+  addAta('🗳️','Eleição do GAO',`${f.membros} representantes (${f.mulheres} mulheres, ${f.jovens} jovens) e igual número de suplentes`,'Art. 27');
+  startObra(f.target); };
+function startObra(id){ const b=BUILDS.find(x=>x.id===id); if(!b) return;
+  if(G.cash<b.cost){ toast('bad','Sem caixa','Falta dinheiro para a contrapartida.'); return; }
+  G.cash-=b.cost; G.obra={id, start:G.day, prog:0, ritmo:1, ritmoDias:0};
+  buildObraSite(id); closeModal(); sfx('good');
+  addAta('🏗️','Início da obra — '+OBRA_NOME[id],'Contrapartida paga; obra acompanhada pelo GAO','Art. 19, I');
+  pushNews(`🏗️ Começa a obra da ${OBRA_NOME[id]} em ${cid()}, acompanhada pelo GAO.`,'good');
+  toast('good','Obra iniciada',`A ${OBRA_NOME[id]} fica pronta em cerca de ${Math.round(CFG.obraDias/30)} meses. O GAO se reúne durante a obra.`);
+  const P=OBRA_POS[id]; camGoal.target.set(P.x,0,P.z-4); camGoal.az=Math.PI-0.45; camGoal.pol=0.9; camGoal.dist=105; camGoal.active=true;   // vista pelo lado da estrada
+  updateHUD(); }
+function tickGovernanca(){
+  if(G.chuva>0) G.chuva--;
+  if(G.obra){ const o=G.obra;
+    if(o.ritmoDias>0){ o.ritmoDias--; if(!o.ritmoDias) o.ritmo=1; }
+    o.prog=Math.min(100,o.prog+(100/CFG.obraDias)*o.ritmo); updateObraVisual();
+    if(o.prog>=100){ if(!_decisionOpen) inaugurar(); return; }
+    const k=G.day-o.start; if(k>0 && k%20===10 && G.day%30!==0) triggerDecision('gao'); }
+  if(G.modoDecisoes && !_decisionOpen && (G.day%30===10 || G.day%30===20)) triggerDecision('demanda');
+}
+let _consForm={cae:5,id:'ubp'};
+function inaugurar(){ _consForm={cae:5,id:G.obra.id}; _prevSpeed=G.speed||1; setSpeed(0); _decisionOpen=true; sfx('good'); openConselhos(); }
+function openConselhos(){ const id=_consForm.id, M=G.gao?G.gao.membros:12, cae=_consForm.cae, base=Math.max(0,M-cae), cfe=Math.max(7,base), compl=cfe-base;
+  openModal(`<div class="kick2">Inauguração · Estatuto Art. 16 e 24</div>
+   <h2 style="text-align:center">🎉 ${OBRA_NOME[id]} <span>inaugurada!</span></h2>
+   <p class="lead">A obra acompanhada pelo GAO foi entregue. Agora seus membros se distribuem em dois conselhos deste empreendimento,
+     com mandato de dois anos (Art. 16, §1º e Art. 24, I):</p>
+   <div class="setrow"><div class="l"><b>CAE — Conselho Administrativo</b><p>De 3 a 7 membros (Art. 24, III). Único que pode ser remunerado, com recursos do próprio empreendimento (Art. 24, IV). Soma-se 1 membro da equipe gerencial e 1 educador socioambiental (Art. 24, V).</p></div>
+     <div class="stepper"><button onclick="consAdj(-1)" ${cae<=3?'disabled':''}>−</button><div class="n">${cae}</div><button onclick="consAdj(1)" ${cae>=7?'disabled':''}>+</button></div></div>
+   <div class="setrow"><div class="l"><b>CFE — Conselho Fiscal</b><p>Os demais membros do GAO; mínimo de 7 pessoas (Art. 24, VI).${compl?` Faltam ${compl}: haverá eleição complementar (R$ 1.500).`:''}</p></div><b style="font-size:22px;min-width:30px;text-align:center">${cfe}</b></div>
+   <div class="kpis">
+     <div class="kpi"><div class="k">Pró-labore do CAE</div><div class="v">${money(cae*1200)}</div><div class="d">por mês</div></div>
+     <div class="kpi"><div class="k">Gestão do CAE</div><div class="v" style="color:var(--mint)">+${(cae*0.8).toFixed(1)}%</div><div class="d">no preço de venda</div></div>
+     <div class="kpi"><div class="k">Fiscalização (CFE)</div><div class="v" style="color:var(--mint)">ativa</div><div class="d">+ confiança · controle social</div></div>
+   </div>
+   <button class="btn primary" style="justify-content:center" onclick="confirmConselhos()">Empossar o CAE e o CFE</button>`); }
+window.consAdj=d=>{ _consForm.cae=Math.max(3,Math.min(7,_consForm.cae+d)); openConselhos(); };
+window.confirmConselhos=()=>{ const id=_consForm.id, M=G.gao?G.gao.membros:12, cae=_consForm.cae, cfe=Math.max(7,M-cae);
+  if(M-cae<7) G.cash-=1500;
+  G.conselhos[id]={cae, cfe, pro:1200};
+  addAta('🤝','Posse do CAE e do CFE — '+OBRA_NOME[id],`CAE com ${cae} membros · CFE com ${cfe} membros · mandato de 2 anos`,'Art. 16 e 24');
+  G.obra=null; removeObraSite(); _decisionOpen=false;
+  const b=BUILDS.find(x=>x.id===id); b.apply(); setSpeed(_prevSpeed||1); updateHUD(); };
+
+/* ----------------- canteiro de obra (muda o cenário conforme o progresso) ----------------- */
+let _obraGrp=null;
+function buildObraSite(id){ removeObraSite(); const P=OBRA_POS[id]; if(!P||!scene) return;
+  if(futureLots[id]){ scene.remove(futureLots[id]); delete futureLots[id]; }
+  const g=new THREE.Group(); g.userData.obra=id;
+  const tap=mat('#d9d2c0',{roughness:.9}), h=2.2;
+  for(const dz of [-P.d/2,P.d/2]){ const m=new THREE.Mesh(new THREE.BoxGeometry(P.w,h,.2),tap); m.position.set(P.x,h/2,P.z+dz); g.add(m); }
+  for(const dx of [-P.w/2,P.w/2]){ const m=new THREE.Mesh(new THREE.BoxGeometry(.2,h,P.d),tap); m.position.set(P.x+dx,h/2,P.z); g.add(m); }
+  const slab=new THREE.Mesh(new THREE.BoxGeometry(P.w-4,.4,P.d-4),mat('#b7b2a6',{roughness:.95})); slab.position.set(P.x,.2,P.z); slab.receiveShadow=true; g.add(slab);
+  const walls=new THREE.Mesh(new THREE.BoxGeometry(P.w-6,3.6,P.d-6),mat('#c9c3b5',{roughness:.85})); walls.position.set(P.x,.4,P.z); walls.scale.y=.02; g.add(walls); g.userData.walls=walls;
+  const pm=mat('#8a8f93',{metalness:.5,roughness:.5});
+  for(let i=0;i<=5;i++) for(const dz of [-(P.d-6)/2,(P.d-6)/2]){ const p=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,5.2,6),pm); p.position.set(P.x-(P.w-6)/2+i*(P.w-6)/5,2.6,P.z+dz); g.add(p); }
+  const ym=mat('#e0b23a',{metalness:.3,roughness:.5}), cx=P.x+P.w/2-6, cz=P.z-P.d/2+5;
+  const tower=new THREE.Mesh(new THREE.BoxGeometry(1.2,20,1.2),ym); tower.position.set(cx,10,cz); g.add(tower);
+  const jib=new THREE.Group(); jib.position.set(cx,20,cz);
+  const arm=new THREE.Mesh(new THREE.BoxGeometry(26,.8,.8),ym); arm.position.set(-8,0,0); jib.add(arm);
+  const cw=new THREE.Mesh(new THREE.BoxGeometry(2.4,1.6,1.6),mat('#5b6268')); cw.position.set(4.5,-.6,0); jib.add(cw);
+  const cable=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,10,4),mat('#333333')); cable.position.set(-16,-5,0); jib.add(cable);
+  const load=new THREE.Mesh(new THREE.BoxGeometry(1.6,1,1.6),mat('#9a7b4f')); load.position.set(-16,-10.2,0); jib.add(load);
+  g.add(jib); g.userData.jib=jib;
+  for(let i=0;i<4;i++){ const m=new THREE.Mesh(new THREE.BoxGeometry(2.2,1,2.2),mat(i%2?'#b3432e':'#a39e93')); m.position.set(P.x-P.w/2+5+i*3,.5,P.z+P.d/2-4); g.add(m); }
+  g.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
+  const lab=makeLabel('🏗️ Obra — '+OBRA_NOME[id]+' · GAO',5.2); lab.position.set(P.x,9,P.z); g.add(lab);
+  scene.add(g); _obraGrp=g; updateObraVisual(); }
+function removeObraSite(){ if(_obraGrp){ scene.remove(_obraGrp); _obraGrp=null; } }
+function updateObraVisual(){ if(!_obraGrp||!G.obra) return; const w=_obraGrp.userData.walls, k=Math.max(.02,G.obra.prog/100);
+  w.scale.y=k; w.position.y=.4+1.8*k; }
+
+/* ----------------- chuva (cenário) ----------------- */
+let _rain=null;
+function startRain(days){ G.chuva=Math.max(G.chuva||0,days); ensureRain(); }
+function ensureRain(){ if(_rain||!scene) return; const N=IS_MOBILE?600:1800, g=new THREE.BufferGeometry(), a=new Float32Array(N*6);
+  for(let i=0;i<N;i++){ const x=(Math.random()-.5)*320, y=Math.random()*90, z=(Math.random()-.5)*320+20;
+    a[i*6]=x; a[i*6+1]=y; a[i*6+2]=z; a[i*6+3]=x+.25; a[i*6+4]=y+2.4; a[i*6+5]=z; }
+  g.setAttribute('position',new THREE.BufferAttribute(a,3));
+  _rain=new THREE.LineSegments(g,new THREE.LineBasicMaterial({color:'#cfe6ee',transparent:true,opacity:.55,depthWrite:false}));
+  _rain.frustumCulled=false; _rain.visible=false; scene.add(_rain); }
+function updateRain(dt){ const on=(G.chuva||0)>0; if(on) ensureRain(); if(!_rain) return; _rain.visible=on; if(!on) return;
+  const p=_rain.geometry.attributes.position, a=p.array, d=dt*75;
+  for(let i=0;i<a.length;i+=6){ a[i+1]-=d; a[i+4]-=d; if(a[i+1]<0){ a[i+1]+=90; a[i+4]+=90; } } p.needsUpdate=true; }
+
+/* ----------------- árvores plantadas em mutirão (cenário) ----------------- */
+const _growing=[]; let _treeMats=null;
+function plantTrees(n,instant){ if(!scene) return;
+  if(!_treeMats) _treeMats={trunk:mat('#5b4326',{roughness:1}), fol:['#3f7d3a','#4f8f44','#356b34','#5a9a4a'].map(c=>mat(c,{roughness:.95,flatShading:true})),
+    tg:new THREE.CylinderGeometry(.35,.5,4,6), fg:new THREE.IcosahedronGeometry(2.6,0)};
+  for(let i=0;i<n;i++){ const side=Math.random()*3|0; let x,z;
+    if(side===0){ x=-30+Math.random()*126; z=151+Math.random()*5; }
+    else if(side===1){ x=-116+Math.random()*14; z=-5+Math.random()*58; }
+    else { x=102+Math.random()*16; z=-5+Math.random()*118; }
+    const g=new THREE.Group(); g.position.set(x,0,z);
+    const t=new THREE.Mesh(_treeMats.tg,_treeMats.trunk); t.position.y=2; g.add(t);
+    const f=new THREE.Mesh(_treeMats.fg,_treeMats.fol[i%4]); f.position.y=4.6; f.rotation.y=Math.random()*6; g.add(f);
+    g.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
+    const target=.6+Math.random()*.5;
+    if(instant) g.scale.setScalar(target); else { g.scale.setScalar(.01); g.userData.target=target; g.userData.delay=i*0.15; _growing.push(g); }
+    scene.add(g); } }
+function growTrees(dt){ for(let i=_growing.length-1;i>=0;i--){ const g=_growing[i];
+  if(g.userData.delay>0){ g.userData.delay-=dt; continue; }
+  const s=g.scale.x+(g.userData.target-g.scale.x)*Math.min(1,dt*2.2); g.scale.setScalar(s);
+  if(Math.abs(s-g.userData.target)<.01){ g.scale.setScalar(g.userData.target); _growing.splice(i,1); } } }
+
+/* =====================================================================
+   MURAL DE TRANSPARÊNCIA e ESTATUTO
+   ===================================================================== */
+function openMural(){
+  const g=G.gao, o=G.obra, nd=Math.max(0,20-(G.day-G.lastDevol)), H=(G.history||[]).slice(-12);
+  const atas=G.atas.slice(-14).reverse();
+  const cons=Object.entries(G.conselhos||{});
+  openModal(`<span class="close-x" onclick="closeModal()"></span>
+   <div class="kick2">Estatuto do GAO · Art. 30 e 31</div>
+   <h2>Mural de <span>transparência</span></h2>
+   <p class="lead">Decisões, presenças, obras e contas à vista de toda a comunidade de ${esc(cid())}.</p>
+   <div class="kpis">
+     <div class="kpi"><div class="k">Atas registradas</div><div class="v">${G._ataSeq||0}</div><div class="d">Art. 31, II</div></div>
+     <div class="kpi"><div class="k">Devolutivas</div><div class="v">${G.devolutivas}</div><div class="d">Art. 9º · obrigatórias</div></div>
+     <div class="kpi"><div class="k">Confiança</div><div class="v" style="color:${G.confianca<35?'var(--coral)':G.confianca<60?'var(--amber)':'var(--mint)'}">${Math.round(G.confianca)}%</div><div class="d">da comunidade</div></div>
+   </div>
+   <div class="build-item" style="align-items:flex-start"><div class="bi-ico">🗳️</div><div class="bi-txt"><b>GAO — Grupo de Acompanhamento de Obras</b>
+     ${g?`<p>${g.membros} representantes eleitos · ${g.mulheres} mulheres (${Math.round(g.mulheres/g.membros*100)}%) · ${g.jovens} jovens · voluntário, sem remuneração (Art. 10).</p>
+        <p>Advertências: ${g.advert} · destituições: ${g.destituidos} · ${o?'acompanhando a obra':'aguardando a próxima obra'}.</p>`
+       :`<p>Ainda não eleito. A comunidade elege o GAO quando a cooperativa inicia a obra da UBP (Estrutura → UBP).</p>`}
+     </div></div>
+   ${o?`<div class="build-item" style="align-items:flex-start"><div class="bi-ico">🏗️</div><div class="bi-txt"><b>Obra da ${OBRA_NOME[o.id]} — ${Math.round(o.prog)}%</b>
+     <div class="mini" style="margin:6px 0"><i style="width:${o.prog}%;background:var(--amber)"></i></div>
+     <p>Ritmo ${ritmoTxt()}${o.ritmoDias?` por mais ${o.ritmoDias} dias`:''} · iniciada no dia ${o.start} · o GAO se reúne a cada 20 dias.</p></div></div>`:''}
+   ${cons.map(([id,c])=>`<div class="build-item" style="align-items:flex-start"><div class="bi-ico">🤝</div><div class="bi-txt"><b>Conselhos da ${OBRA_NOME[id]}</b>
+     <p>CAE: ${c.cae} membros (+ gerente e educador) · pró-labore ${money(c.pro)}/membro · CFE: ${c.cfe} membros, voluntários.</p></div></div>`).join('')}
+   <button class="btn" style="justify-content:space-between;margin:4px 0 12px" ${nd?'disabled':''} onclick="realizarDevolutiva()">
+     <span>🗣️ Realizar devolutiva à comunidade</span><small>${nd?`disponível em ${nd} dias`:'R$ 1.500 · transporte e lanche'}</small></button>
+   ${H.length>1?`<div class="chart"><div class="ct"><span>Contas: resultado mensal</span><span>R$</span></div>${barChart(H.map(h=>h.lucro),H.map(h=>'M'+h.m))}</div>`:''}
+   <div class="sechd">Atas</div>
+   ${atas.length?atas.map(a=>`<div class="ata"><div class="ah"><span>Ata nº ${a.n} · dia ${a.dia}</span>${a.art?`<span>${a.art}</span>`:''}</div>
+      <b>${a.emoji} ${a.titulo}</b><p>${a.escolha}${a.votos?` — ${a.favor} de ${a.votos} votos`:''}</p></div>`).join('')
+     :'<p class="lead" style="opacity:.8">Nenhuma ata ainda. Cada decisão do grupo gera uma ata aqui.</p>'}
+   <button class="btn" style="justify-content:center;margin-top:10px" onclick="openEstatuto()">📘 O estatuto do GAO, em resumo</button>`);
+}
+window.openMural=openMural;
+function openEstatuto(){
+  const C=(t,p)=>`<div class="build-item" style="align-items:flex-start"><div class="bi-txt"><b>${t}</b><p>${p}</p></div></div>`;
+  openModal(`<span class="close-x" onclick="closeModal()"></span>
+   <div class="kick2">Resumo didático</div>
+   <h2>Estatuto do <span>GAO</span></h2>
+   <p class="lead">O Grupo de Acompanhamento de Obras é o órgão colegiado que acompanha, com a comunidade, a implantação dos
+     empreendimentos de geração de trabalho e renda do PEA Pescarte no município.</p>
+   ${C('🎯 Finalidade — Art. 1º, 18 e 19','Acompanhar e se manifestar sobre a implantação dos empreendimentos, participar das discussões de licenças, garantir informação e participação da comunidade e fazer devolutivas periódicas.')}
+   ${C('🗳️ Composição — Art. 10, 23 e 27','De 9 a 21 representantes eleitos por voto secreto, com pelo menos 30% de mulheres e 1 a 3 vagas para jovens de 16 a 29 anos. Participação voluntária e sem remuneração.')}
+   ${C('🪑 Reuniões e decisões — Art. 31','Quórum acima de 50% na 1ª chamada e acima de 25% na 2ª. Decisões por maioria simples (50% + 1 dos presentes); temas estatutários, membros e conselhos exigem ¾. Toda reunião tem ata, validada e publicada em até 5 dias úteis.')}
+   ${C('✍️ Assembleia extraordinária — Art. 13','Pode ser convocada pela maioria do GAO, por abaixo-assinado com 50 ou mais pessoas da cadeia da pesca (18+) ou pela coordenação técnica.')}
+   ${C('🔎 Transparência — Art. 9º, 20 XII e 30','Devolutivas obrigatórias, mural de presenças e justificativas, informação acessível e em tempo hábil (mecanismos de alarme) e fiscalização constante com confiança limitada.')}
+   ${C('⚖️ Princípios — Art. 17 e 20','Legalidade, impessoalidade, moralidade, transparência, economicidade e eficiência, sem discriminação. É vedado: propaganda partidária, falar em nome do GAO sem a maioria, prometer vagas de emprego e usar o GAO para promoção pessoal.')}
+   ${C('🤝 Depois da inauguração — Art. 16 e 24','O GAO se dissolve e seus membros formam, por empreendimento, o CAE (3 a 7 membros, único que pode ser remunerado) e o CFE (mínimo de 7), com mandato de dois anos.')}
+   ${C('📛 Regime disciplinar — Art. 33 e 34','Advertência verbal ou escrita; destituição por mais de ¾ dos votos. Cabem penalidades a 2 faltas seguidas ou 3 alternadas sem justificativa, uso do nome do GAO em benefício próprio e ofensas.')}
+   <p class="lead" style="font-size:11.5px;margin-top:8px">Resumo para fins educativos. Em cada município, vale o texto integral do estatuto aprovado pela comunidade.</p>`);
+}
+window.openEstatuto=openEstatuto;
 
 /* =====================================================================
    v1.0 — DICA INICIAL
@@ -2561,7 +3178,7 @@ window.startGame=startGame;
 function showHint(){ const h=document.getElementById('hint'); if(!h||IS_MOBILE) return;
   h.innerHTML= IS_MOBILE
     ? 'Arraste para mover · pinça para zoom · toque num tanque para detalhes'
-    : '<b>Arraste</b> move · <b>botão direito</b> gira · <b>roda</b> zoom · <span class="kbd">Espaço</span> pausa · <span class="kbd">1</span>–<span class="kbd">8</span> ações · <span class="kbd">H</span> atalhos · <span class="kbd">Esc</span> menu';
+    : '<b>Arraste</b> move · <b>botão direito</b> gira · <b>roda</b> zoom · <span class="kbd">Espaço</span> pausa · <span class="kbd">1</span>–<span class="kbd">9</span> ações · <span class="kbd">H</span> atalhos · <span class="kbd">Esc</span> menu';
   h.style.display='block'; h.style.transition='opacity .8s'; h.style.opacity='1';
   clearTimeout(showHint._t); showHint._t=setTimeout(()=>{ h.style.opacity='0'; setTimeout(()=>h.style.display='none',900); },26000); }
 
@@ -2570,7 +3187,8 @@ function showHint(){ const h=document.getElementById('hint'); if(!h||IS_MOBILE) 
    ===================================================================== */
 const SAVE_FIELDS=['day','cash','feed','profitAcc','wells','hasGen','hasSolar','hasNet','hasTruck','hasUBP','hasUPP',
   'priceMul','priceTimer','outage','teams','tanks','news','buyers','receivables','buyerSeq','hasPNAE','_moraleDays',
-  'sustentabilidade','confianca','producedKg','oficina','monthSnap','history','_tt','_ubpAviso','_uppAviso'];
+  'sustentabilidade','confianca','producedKg','oficina','monthSnap','history','_tt','_ubpAviso','_uppAviso',
+  'cidade','modoDecisoes','gao','obra','conselhos','atas','_ataSeq','devolutivas','lastDevol','_gaoInfra','chuva','_arvores','_recentDec','_readyAnn'];
 function saveGame(silent){
   if(!G.started||G.over) return false;
   const g={}; SAVE_FIELDS.forEach(k=>{ g[k]=G[k]; });
@@ -2593,12 +3211,16 @@ function loadGame(){
   if(G.hasTruck) buildTruck();
   if(G.hasUBP) buildUBP();
   if(G.hasUPP) buildUPP();
+  G.conselhos=G.conselhos||{}; G.atas=G.atas||[];
+  if(G.obra) buildObraSite(G.obra.id);
+  if(G._arvores) plantTrees(14*G._arvores,true);
+  if(G.chuva>0) ensureRain();
   for(let w=3; w<=G.wells; w++) wellMesh(-108,-10+(w-1)*14,w);
   assignHumanJobs(); refreshTanks(); updateHUD(); updateAlerts();
   if(G.news.length){ document.getElementById('ticker').style.display='block'; updateTicker(); }
   return true;
 }
-function resumeGame(){ hideMenu(); closeModal(); G.started=true; setSpeed(1); audioOn(); sfx('good');
+function resumeGame(){ hideMenu(); closeModal(); G.started=true; setSpeed(1); audioOn(); sfx('good'); setCityLabels();
   document.getElementById('teams').classList.add('show'); _teamsMin=true; renderTeams(); renderTools();
   showHint();
   toast('info','Bem-vindo de volta',`Gestão retomada no mês ${Math.min(12,Math.floor(G.day/30)+1)} de 12.`); }
@@ -2613,16 +3235,16 @@ function showMainMenu(){
   _menuOpen=true; closeModal(); document.body.classList.add('in-menu');
   const info=saveInfo(), m=document.getElementById('menu');
   m.innerHTML=`<div class="mwrap">
-    <div class="kick">PEA Pescarte · Norte Fluminense</div>
+    <div class="kick">PEA Pescarte · Gestão cooperativa</div>
     <h1>Aquipólis<span>Tycoon</span></h1>
     <p class="lead">Conduza por 12 meses a Unidade de Produção Aquícola de uma cooperativa de 22 famílias e construa a
       Rota da Tilápia: produzir, beneficiar e agregar valor — com água boa, contas em dia e a comunidade junto.</p>
     ${info?`<button class="mbtn primary" onclick="menuContinue()">${icon('resume')}<span>Continuar<small>Mês ${info.mes} de 12 · caixa ${money(info.cash)} · salvo ${info.when}</small></span></button>`:''}
     <button class="mbtn ${info?'':'primary'}" onclick="menuNew()">${icon('newg')}<span>Novo jogo<small>Começar uma nova gestão da UPA</small></span></button>
-    <button class="mbtn" onclick="startTutorial(true)">${icon('book')}<span>Como jogar<small>Tutorial rápido em 8 passos</small></span></button>
+    <button class="mbtn" onclick="startTutorial(true)">${icon('book')}<span>Como jogar<small>Tutorial rápido em ${TUTORIAL.length} passos</small></span></button>
     <button class="mbtn" onclick="openSettings()">${icon('gear')}<span>Configurações<small>Gráficos, áudio e interface</small></span></button>
     <button class="mbtn" onclick="openCredits()">${icon('info')}<span>Sobre o projeto<small>Fontes, dados e créditos</small></span></button>
-    <div class="foot"><span>v1.0 · Simulação educativa</span><a href="../index.html">Portal do projeto</a><a href="../oficinas/oficina-upa.html">Oficinas de processos</a></div>
+    <div class="foot"><span>v1.1 · Simulação educativa · qualquer município</span><a href="../index.html">Portal do projeto</a><a href="../oficinas/oficina-upa.html">Oficinas de processos</a></div>
   </div>`;
   m.classList.add('show');
 }
@@ -2678,6 +3300,7 @@ function setQuality(q){ QUALITY_CUR=q; PREFS.quality=q; savePrefs();
 window.setQuality=setQuality;
 window.setUIScale=v=>{ PREFS.ui=v; savePrefs(); document.documentElement.style.setProperty('--uiz',v); openSettings(); };
 window.togPref=k=>{ PREFS[k]=!PREFS[k]; savePrefs(); if(k==='ambient'){ audioOn(); updateAmbient(); } openSettings(); };
+window.togGame=k=>{ G[k]=!G[k]; if(k==='modoDecisoes'&&G[k]) G.buyers=[]; openSettings(); };
 window.toggleMuteSettings=()=>{ toggleMute(); openSettings(); };
 window.toggleLabelsSettings=()=>{ toggleLabels(); openSettings(); };
 window.deleteSave=()=>{ lsDel(SAVE_KEY); toast('info','Save apagado','O progresso salvo foi removido deste navegador.'); if(_menuOpen) showMainMenu(); openSettings(); };
@@ -2694,6 +3317,9 @@ function openSettings(){
     <div class="setrow"><div class="l"><b>Efeitos sonoros</b><p>Cliques, vendas e alertas (tecla M).</p></div>${sw(!_muted,'toggleMuteSettings()')}</div>
     <div class="setrow"><div class="l"><b>Ambiente</b><p>Som suave de água corrente do RAS.</p></div>${sw(PREFS.ambient,"togPref('ambient')")}</div>
     <div class="setrow"><div class="l"><b>Volume</b></div><input type="range" min="0" max="1" step="0.05" value="${PREFS.volume}" oninput="setVolume(+this.value)" aria-label="Volume"></div>
+    ${G.started?`<div class="sechd">Jogo</div>
+    <div class="setrow"><div class="l"><b>Modo decisões</b><p>A equipe cuida da rotina; surgem demandas do dia a cada 10 dias.</p></div>${sw(G.modoDecisoes,"togGame('modoDecisoes')")}</div>
+    <div class="setrow"><div class="l"><b>Modo oficina</b><p>Decisões por votação da assembleia (maioria simples) e perguntas para refletir.</p></div>${sw(G.oficina,"togGame('oficina')")}</div>`:''}
     <div class="sechd">Interface</div>
     <div class="setrow"><div class="l"><b>Tamanho da interface</b><p>Útil em telas grandes, projetores e oficinas.</p></div>
       ${seg([[0.9,'90%'],[1,'100%'],[1.15,'115%'],[1.3,'130%']],PREFS.ui,'setUIScale')}</div>
@@ -2713,7 +3339,7 @@ function openShortcuts(){
   openModal(`<span class="close-x" onclick="backOrClose()"></span><h2>Atalhos de <span>teclado</span></h2>
     <div class="kbdgrid">
       ${K('Espaço / P','Pausar ou retomar o tempo')}
-      ${K('1 – 8','Ações da barra inferior (criar peixe … aprender)')}
+      ${K('1 – 9','Ações da barra inferior (criar peixe … mural)')}
       ${K('W A S D / setas','Mover a câmera')}
       ${K('Q / E','Girar a câmera')}
       ${K('+ / −','Aproximar / afastar')}
@@ -2730,7 +3356,7 @@ window.openShortcuts=openShortcuts;
 function openCredits(){
   openModal(`<span class="close-x" onclick="backOrClose()"></span><h2>Sobre o <span>projeto</span></h2>
     <p class="lead"><b>Aquipólis Tycoon — A Rota da Tilápia</b> é uma simulação educativa de gestão cooperativa, criada para
-      oficinas com comunidades pesqueiras no âmbito do <b>PEA Pescarte</b> (Norte Fluminense). O jogador conduz a Unidade de
+      oficinas com comunidades pesqueiras no âmbito do <b>PEA Pescarte</b>, e pode ser usada em qualquer município. O jogador conduz a Unidade de
       Produção Aquícola (UPA) e pode completar a cadeia com a Unidade de Beneficiamento (UBP) e a Unidade de Processamento (UPP).</p>
     <div class="build-item">${icon('book','style="font-size:22px;color:var(--aqua)"')}<div class="bi-txt"><b>Base técnica</b>
       <p>Parâmetros de produção, investimentos e preços inspirados nos estudos de viabilidade (EVTEAS) da UPA, da UBP-M e da UPP.
