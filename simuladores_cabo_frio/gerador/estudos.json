@@ -1,0 +1,137 @@
+[
+ {
+  "slug": "planejado_prime",
+  "n": "Marcenaria de móveis planejados (Planejado Prime v1.0)",
+  "tag": "ARQUIVO ANTERIOR",
+  "nota": "o estudo que deu origem a esta rodada",
+  "capex": 154675,
+  "ebitda": 237167,
+  "pessoas": 6
+ },
+ {
+  "slug": "rota_prime",
+  "n": "Hub de entregas de última milha (Rota Prime v1.0)",
+  "tag": "ESTUDO IRMÃO",
+  "nota": "mesma rodada; números da abertura do arquivo",
+  "capex": 132595,
+  "ebitda": 182480,
+  "pessoas": 5
+ },
+ {
+  "slug": "lona_prime",
+  "n": "Toldos, capotaria náutica e capas de barco (Lona Prime v1.0)",
+  "tag": "ESTUDO IRMÃO",
+  "nota": "mesma rodada; números da abertura do arquivo",
+  "capex": 148925,
+  "ebitda": 179882,
+  "pessoas": 5
+ },
+ {
+  "slug": "envio_prime",
+  "n": "Fulfillment para marcas de moda praia (Envio Prime v1.0)",
+  "tag": "ESTUDO IRMÃO",
+  "nota": "mesma rodada; números da abertura do arquivo",
+  "capex": 115172,
+  "ebitda": 152037,
+  "pessoas": 5
+ },
+ {
+  "slug": "piscina_prime",
+  "n": "Loja de piscina com manutenção mensal (Piscina Prime v1.0)",
+  "tag": "ESTUDO IRMÃO",
+  "nota": "mesma rodada; números da abertura do arquivo",
+  "capex": 123280,
+  "ebitda": 147118,
+  "pessoas": 6
+ },
+ {
+  "slug": "jardim_prime",
+  "n": "Garden center e paisagismo (Jardim Prime v1.0)",
+  "tag": "ESTUDO IRMÃO",
+  "nota": "mesma rodada; números da abertura do arquivo",
+  "capex": 122187,
+  "ebitda": 114985,
+  "pessoas": 6
+ },
+ {
+  "slug": "uniforme_prime",
+  "n": "Uniformes e camisetas personalizadas (Uniforme Prime v1.0)",
+  "tag": "ARQUIVO ANTERIOR",
+  "nota": "a ideia anterior abaixo de R$ 200 mil",
+  "capex": 175950,
+  "ebitda": 237411,
+  "pessoas": 4
+ },
+ {
+  "slug": "visual_prime",
+  "n": "Gráfica de comunicação visual (Visual Prime v1.0)",
+  "tag": "ARQUIVO ANTERIOR",
+  "nota": "a primeira ideia abaixo de R$ 200 mil",
+  "capex": 195500,
+  "ebitda": 218593,
+  "pessoas": 6
+ },
+ {
+  "slug": "praia_prime",
+  "n": "Confecção de moda praia (Praia Prime v1.0)",
+  "tag": "ARQUIVO ANTERIOR",
+  "nota": "o maior EBITDA dos estudos, mas com CAPEX acima de R$ 400 mil",
+  "capex": 423200,
+  "ebitda": 403689,
+  "pessoas": 14
+ },
+ {
+  "slug": "pastel_prime",
+  "n": "Fábrica de massa para pastel (Pastel Prime v3.2)",
+  "tag": "ARQUIVO ANTERIOR",
+  "nota": "EBITDA com o turno medido; CAPEX corrigido com a elétrica que o arquivo omitia (R$ 1.224.840 sem ela)",
+  "capex": 1295640,
+  "ebitda": 388713,
+  "pessoas": 9
+ },
+ {
+  "slug": "gelo_prime",
+  "n": "Fábrica de gelo (Gelo Prime v1.0)",
+  "tag": "DESCARTADA PELO DONO",
+  "nota": "",
+  "capex": 752675,
+  "ebitda": 387192,
+  "pessoas": 4
+ },
+ {
+  "slug": "enxoval_prime",
+  "n": "Lavanderia e enxoval (Enxoval Prime v1.0)",
+  "tag": "DESCARTADA PELO DONO",
+  "nota": "",
+  "capex": 836050,
+  "ebitda": 602327,
+  "pessoas": 6
+ },
+ {
+  "slug": "estetica",
+  "n": "Estética automotiva (lavagem, polimento, higienização)",
+  "tag": "TRIAGEM ±40%",
+  "nota": "Estudada e descartada: o galpão comporta um box de lavagem e um de polimento, e a mão de obra registrada come a margem.",
+  "capex": 150000,
+  "ebitda": 130000,
+  "pessoas": 6
+ },
+ {
+  "slug": "marmitas",
+  "n": "Cozinha de marmitas para empresas e delivery",
+  "tag": "TRIAGEM ±40%",
+  "nota": "Receita alta e margem apertada; vigilância sanitária e o mesmo risco de alimento do pastel.",
+  "capex": 190000,
+  "ebitda": 220000,
+  "pessoas": 8
+ },
+ {
+  "slug": "storage",
+  "n": "Self-storage (boxes internos + vagas no pátio)",
+  "tag": "TRIAGEM ±40%",
+  "nota": "Quase sem gente, mas a receita de boxes em Cabo Frio mal passa do aluguel.",
+  "capex": 200000,
+  "ebitda": 90000,
+  "pessoas": 1
+ }
+]
